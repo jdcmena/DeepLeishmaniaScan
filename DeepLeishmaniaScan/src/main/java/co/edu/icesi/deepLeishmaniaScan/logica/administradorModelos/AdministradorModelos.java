@@ -9,6 +9,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	public static final String MODEL_FOLDER ="/models/"; //TODO
 
 	public AdministradorModelos() {
+		/*
 		// TODO - implement AdministradorModelos.AdministradorModelos
 		File model = new File(MODEL_FOLDER);
 		if(!model.exists()){
@@ -19,6 +20,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		}
 		
 		throw new UnsupportedOperationException();
+		*/
 	}
 
 	/**

@@ -10,6 +10,12 @@ public class API implements IAPI{
 	public static final String CLASIFY_SCRIPT="";
 	public static final String TRAIN_SCRIPT="";
 	
+	private static String test_com = "cd ~/DeepLeishmaniaScan/";
+	
+	public API(){
+		
+	}
+	
 	@Override
 	public double[] entrenar(String modelo) {
 		// TODO Auto-generated method stub
@@ -22,8 +28,22 @@ public class API implements IAPI{
 		return 0;
 	}
 
-	public void run() throws Exception{
-		Process p = Runtime.getRuntime().exec("");
+	@Override
+	public void runCommand(String command) throws Exception{
+		Process p;
+		try{
+		p = Runtime.getRuntime().exec(test_com);
+		}
+		catch(IOException io){
+			System.out.println("catched IOExcp");
+			p = Runtime.getRuntime().exec("cd ~");
+			p.waitFor();
+			p = Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan");
+			p.waitFor();
+			p = Runtime.getRuntime().exec(test_com);
+			p.waitFor();
+			System.out.println("folder created");
+		}
 		  final InputStream stream = p.getInputStream();
 		  new Thread(new Runnable() {
 		    public void run() {

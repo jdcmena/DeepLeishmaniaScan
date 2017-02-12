@@ -1,5 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 
+import co.edu.icesi.deepLeishmaniaScan.framework.API;
+import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.IAdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.AdministradorModelos;
@@ -15,9 +17,20 @@ public class Orquestador {
 	public static IAdministradorModelos administradorModelos;
 	public static IClasificacion clasificacion;
 	public static IEntrenamiento entrenamiento;
+	
+	//****************just for testing*****
+	public static IAPI api;
+	//****************just for testing*****
 
 	public static void main(String[] args){
 		init();
+		try {
+			api = new API();
+			api.runCommand("");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static void init(){
