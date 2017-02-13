@@ -28,7 +28,7 @@ public interface IAdministradorModelos {
 	 */
 	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr, boolean nesterov);
 	
-	public List getListaModelos();
+	public List<Modelo> getListaModelos();
 	
 	/**
 	 * 

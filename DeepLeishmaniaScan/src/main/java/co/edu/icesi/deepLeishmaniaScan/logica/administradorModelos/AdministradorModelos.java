@@ -60,7 +60,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	}
 
 	@Override
-	public List getListaModelos() {
+	public List<Modelo> getListaModelos() {
 		// TODO - implement AdministradorModelos.getListaModelos
 		throw new UnsupportedOperationException();
 	}
