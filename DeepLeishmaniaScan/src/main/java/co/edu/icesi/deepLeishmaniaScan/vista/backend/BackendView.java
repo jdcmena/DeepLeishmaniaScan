@@ -3,12 +3,12 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.plaf.MenuItemUI;
 
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
@@ -64,14 +64,23 @@ public class BackendView extends JFrame implements ActionListener {
 		BackendView bV = new BackendView();
 		bV.setVisible(true);
 	}
+	
+	public void cargarNuevasImagenes(String path){
+		orquestador.cargarNuevasImagenes(path);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		try {
 
-		if (e.getActionCommand().equals("CARGAR_IMAGENES")) {
-			panelConfiguracion.showFileChooser();
+			if (e.getActionCommand().equals("CARGAR_IMAGENES")) {
+				panelConfiguracion.showFileChooser();
+			}
+		} catch (IOException io) {
+
+		} catch (Exception ex) {
+
 		}
-
 	}
 
 }

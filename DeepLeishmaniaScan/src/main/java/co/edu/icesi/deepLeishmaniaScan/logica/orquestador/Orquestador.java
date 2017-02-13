@@ -102,4 +102,10 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 		entrenamiento = new Entrenamiento();
 	}
 
+	@Override
+	public void cargarNuevasImagenes(String path) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

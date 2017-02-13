@@ -2,6 +2,7 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -70,9 +71,14 @@ public class PanelConfiguracion extends JPanel {
 
 	}
 	
-	public void showFileChooser(){
+	public void showFileChooser() throws IOException{
 		jfc.setDialogTitle("Seleccione la carpeta que contenga las imagenes nuevas");
-		jfc.showOpenDialog(this);
+		int returnVal = jfc.showOpenDialog(this);
+		if(returnVal == JFileChooser.APPROVE_OPTION){
+			jfc.getSelectedFile().getCanonicalPath();
+			
+		}
+		
 	}
 
 }
