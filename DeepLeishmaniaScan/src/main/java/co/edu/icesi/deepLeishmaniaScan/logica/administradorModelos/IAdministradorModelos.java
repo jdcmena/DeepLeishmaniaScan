@@ -1,5 +1,6 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IAdministradorModelos {
@@ -13,8 +14,9 @@ public interface IAdministradorModelos {
 	/**
 	 * 
 	 * @param id
+	 * @throws IOException 
 	 */
-	public Modelo getModeloPorId(int id);
+	public Modelo getModeloPorId(String id) throws IOException;
 	
 	/**
 	 * 
@@ -39,7 +41,10 @@ public interface IAdministradorModelos {
 	 * [3]: decay rate of learning rate : double
 	 * [4]: nesterov technique for optimization: boolean
 	 * [5]: name
+	 * @throws Exception 
 	 */
-	public void crearModelo(String[] runConfigParams);
+	public void crearModelo(String nombre, String[] runConfigParams) throws Exception;
+	
+	public void guardarModelo(String modelId, String[] runconfigParams) throws Exception;
 	
 }

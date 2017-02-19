@@ -1,9 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 
+import java.io.IOException;
 import java.util.List;
-
-import co.edu.icesi.deepLeishmaniaScan.framework.API;
-import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.IAdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.AdministradorModelos;
@@ -15,7 +13,7 @@ import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IClasificacion;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IEntrenamiento;
 
 public class Orquestador implements IAdministradorImagenes, IAdministradorModelos, IClasificacion, IEntrenamiento {
-
+	
 	public static IAdministradorImagenes administradorImagenes;
 	public static IAdministradorModelos administradorModelos;
 	public static IClasificacion clasificacion;
@@ -27,74 +25,73 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 
 	@Override
 	public String[] obtenerMetricas(String path) {
-		// TODO Auto-generated method stub
-		return null;
+		return entrenamiento.obtenerMetricas(path);
 	}
 
 	@Override
 	public double[] entrenar(String path) {
-		// TODO Auto-generated method stub
-		return null;
+		return entrenamiento.entrenar(path);
 	}
 
 	@Override
 	public double clasificar(String path) {
-		// TODO Auto-generated method stub
-		return 0;
+		return clasificacion.clasificar(path);
 	}
 
 	@Override
 	public Modelo cargarModelo(String nombre) {
-		// TODO Auto-generated method stub
-		return null;
+		return administradorModelos.cargarModelo(nombre);
 	}
 
 	@Override
-	public Modelo getModeloPorId(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Modelo getModeloPorId(String id) throws IOException{
+		return administradorModelos.getModeloPorId(id);
 	}
 
 	@Override
 	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr,
 			boolean nesterov) {
-		// TODO Auto-generated method stub
-
+		administradorModelos.setParametrosModelo(model, nEpoch, nImgPerEpoch, lR, mR, dLr, nesterov);
 	}
 
 	@Override
 	public List<Modelo> getListaModelos() {
-		// TODO Auto-generated method stub
-		return null;
+		return administradorModelos.getListaModelos();
 	}
 
 	@Override
-	public void crearModelo(String[] runConfigParams) {
-		// TODO Auto-generated method stub
-
+	public void crearModelo(String nombre, String[] runConfigParams) throws Exception{
+		administradorModelos.crearModelo(nombre, runConfigParams);
 	}
 
 	@Override
 	public String getRutaPositivos() {
-		// TODO Auto-generated method stub
-		return null;
+		return administradorImagenes.getRutaPositivos();
 	}
 
 	@Override
 	public String getRutaNegativos() {
-		// TODO Auto-generated method stub
-		return null;
+		return administradorImagenes.getRutaNegativos();
 	}
 
 	@Override
 	public String getRutaConjuntoDeDatos() {
-		// TODO Auto-generated method stub
-		return null;
+		return administradorImagenes.getRutaConjuntoDeDatos();
 	}
 
+	@Override
+	public void cargarNuevasImagenes(String path) {
+		administradorImagenes.cargarNuevasImagenes(path);
+	}
+	
+	@Override
+	public void guardarModelo(String modelId, String[] runconfigParams) throws Exception {
+		administradorModelos.guardarModelo(modelId, runconfigParams);
+	}
+	
 	////////////////////////////////////////
 	////////////////////////////////////////
-
+	
 	private static void init() {
 		administradorImagenes = new AdministradorImagenes();
 		administradorModelos = new AdministradorModelos();
@@ -102,10 +99,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 		entrenamiento = new Entrenamiento();
 	}
 
-	@Override
-	public void cargarNuevasImagenes(String path) {
-		// TODO Auto-generated method stub
-		
-	}
+
+	
+	
 
 }

@@ -4,12 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
+import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
 public class BackendView extends JFrame implements ActionListener {
@@ -34,7 +34,7 @@ public class BackendView extends JFrame implements ActionListener {
 
 	public BackendView() {
 
-		setTitle("Ventana de configuración de sistema");
+		setTitle("Ventana de configuracion de sistema");
 		menuBar = new JMenuBar();
 		menu = new JMenu("Archivo");
 		menuItem = new JMenuItem("Cargar Imagenes nuevas");
@@ -43,30 +43,33 @@ public class BackendView extends JFrame implements ActionListener {
 		// menuItem.addActionListener(this);
 		menu.add(menuItem);
 		menuBar.add(menu);
-
 		this.setJMenuBar(menuBar);
-
-		setLayout(new BorderLayout());
-
+		getContentPane().setLayout(new BorderLayout());
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		orquestador = new Orquestador();
+		
 		initPnlConfig();
-
 		pack();
 
 	}
 
 	private void initPnlConfig() {
 		panelConfiguracion = new PanelConfiguracion(this);
-		this.add(panelConfiguracion, BorderLayout.CENTER);
+		panelModelos = new PanelModelos(this);
+		getContentPane().add(panelConfiguracion, BorderLayout.CENTER);
+		getContentPane().add(panelModelos, BorderLayout.EAST);
 
 	}
-
-	public static void main(String[] args) {
-		BackendView bV = new BackendView();
-		bV.setVisible(true);
+	public List<Modelo> getListaModelos(){
+		return orquestador.getListaModelos();
 	}
-	
-	public void cargarNuevasImagenes(String path){
+
+	public void cargarNuevasImagenes(String path) {
 		orquestador.cargarNuevasImagenes(path);
+	}
+	public void crearModelo(String nombre, String[] runConfig){
+		
 	}
 
 	@Override
@@ -81,6 +84,13 @@ public class BackendView extends JFrame implements ActionListener {
 		} catch (Exception ex) {
 
 		}
+	}
+	
+	////////////MAIN
+	
+	public static void main(String[] args) {
+		BackendView bV = new BackendView();
+		bV.setVisible(true);
 	}
 
 }

@@ -50,4 +50,10 @@ public class Modelo {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public String toString() {
+		return "Modelo [id=" + id + ", nombre=" + nombre + "]";
+	}
+	
+
 }

@@ -48,7 +48,7 @@ public class PanelConfiguracion extends JPanel {
 
 	private void initPnlConfig() {
 
-		this.setBorder(BorderFactory.createTitledBorder("Configuración de hiperparámetros"));
+		this.setBorder(BorderFactory.createTitledBorder("Configuracion de hiperparametros"));
 		setLayout(new GridLayout(0, 1));
 		add(new JLabel("Tasa de aprendizaje"));
 		add(txts[0]);
@@ -75,8 +75,8 @@ public class PanelConfiguracion extends JPanel {
 		jfc.setDialogTitle("Seleccione la carpeta que contenga las imagenes nuevas");
 		int returnVal = jfc.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION){
-			jfc.getSelectedFile().getCanonicalPath();
-			
+			String selected = jfc.getSelectedFile().getAbsolutePath();
+			principal.cargarNuevasImagenes(selected);
 		}
 		
 	}
