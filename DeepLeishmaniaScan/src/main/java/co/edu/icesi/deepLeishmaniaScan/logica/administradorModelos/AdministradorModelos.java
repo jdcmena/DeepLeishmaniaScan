@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdministradorModelos implements IAdministradorModelos {
-	
-	private static final String MODELS_DIRECTORY = ".\\src\\main\\resources\\models";
-	private static final String MODELS_LIST = ".\\src\\main\\resources\\modelsList.txt";
-	private static final String NEW_MODEL_TEMPLATE = MODELS_DIRECTORY+"\\";
+	private static final char OS = File.separatorChar;
+	private static final String MODELS_DIRECTORY = "."+OS+"src"+OS+"main"+OS+"resources"+OS+"models"+OS+"";
+	private static final String MODELS_LIST = "."+OS+"src"+OS+"main"+OS+"resources"+OS+"modelsList.txt";
+	private static final String NEW_MODEL_TEMPLATE = MODELS_DIRECTORY;
 	
 	private ArrayList<Modelo> listaModelos; 
 	
@@ -35,22 +35,41 @@ public class AdministradorModelos implements IAdministradorModelos {
 		// TODO - implement AdministradorModelos.cargarModelo
 		throw new UnsupportedOperationException();
 	}
-	
+	/**
+	 * Cuando se va a guardar un modelo NUEVO
+	 */
 	@Override
-	public void guardarModelo(String modelId, String[] runconfigParams) throws Exception { //TODO Ready to Test
+	public void guardarModelo(Modelo model, String[] runConfigParams) throws Exception { //TODO Ready to Test
 		final Gson gson = new Gson();
-		gson.toJson(getModeloPorId(modelId), new FileWriter(NEW_MODEL_TEMPLATE+modelId+"\\"+modelId+".json"));
-		gson.toJson(runconfigParams, new FileWriter(NEW_MODEL_TEMPLATE+modelId+"\\runconfig.json"));
+		String folderPath = NEW_MODEL_TEMPLATE+model.getID()+OS;
+		String jsonRunConfigPath = NEW_MODEL_TEMPLATE+model.getID()+OS+"runconfig.json";
+		
+		File modelJson = new File(folderPath);
+		//modelJson.mkdirs();
+		modelJson.mkdir();
+		modelJson.createNewFile();
+		
+		modelJson = new File(folderPath+model.getID()+".json");
+		modelJson.getParentFile().mkdirs();
+		modelJson.createNewFile();
+		
+		File modelJsonRunConfig = new File(NEW_MODEL_TEMPLATE+model.getID()+OS+"runconfig.json");
+		modelJsonRunConfig.getParentFile().mkdirs();
+		modelJsonRunConfig.createNewFile();
+		
+		
+		gson.toJson(model, new FileWriter(folderPath+model.getID()+".json"));
+		gson.toJson(runConfigParams, new FileWriter(jsonRunConfigPath));
 	}
 
 	/**
-	 * 
+	 * Buscar un modelo ya creado
 	 * @param id
 	 */
 	@Override
 	public Modelo getModeloPorId(String id) throws IOException{ //TODO Ready to test
 		final Gson gson = new Gson();
-		Modelo prop = gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE+id), Modelo.class);
+		Modelo prop = gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE+id+OS+id+".json"), Modelo.class);
 		return prop;
 	}
 
@@ -87,13 +106,19 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 */
 	@Override
 	public void crearModelo(String nombre, String[] runConfigParams) throws Exception{ //TODO
-		if(!modelExist(nombre)){
-			createModelFolder(nombre);
+		Modelo modelo = new Modelo(nombre);
+		if(!modelExist(modelo.getID()+"")){
+			createModelFolder(modelo.getID()+"");
 		}
-		else{
-			throw new Exception();
-		}
+		guardarModelo(modelo, runConfigParams);
+		
 	}
+	/**
+	 * verifica si el nombre del modelo pasado por parametro ya existe
+	 * @param modelId
+	 * @return true o false
+	 * @throws IOException
+	 */
 	private boolean modelExist(String modelId) throws IOException{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(MODELS_LIST)));
 		String line = "";
@@ -111,19 +136,27 @@ public class AdministradorModelos implements IAdministradorModelos {
 	
 	//////////////
 	
-	
+	/**
+	 * crea el directorio raiz de los modelos y crea el archivo con los nombres de modelos si no existe, y los lee
+	 * @throws IOException
+	 */
 	private void createRootModelsFolder() throws IOException{
 		File mainFolder = new File(MODELS_DIRECTORY);
 		if(!mainFolder.exists()){
-			mainFolder.getParentFile().mkdirs();
+			mainFolder.mkdirs();
+			mainFolder.createNewFile();
+			System.out.println(mainFolder.getAbsolutePath());
 		}
 		File modelList = new File(MODELS_LIST);
 		if(!modelList.exists()){
 		modelList.getParentFile().mkdirs();
+		modelList.createNewFile();
 		}
+		System.out.println(modelList.getAbsolutePath());
 		loadSavedModels(modelList);
 	}
 	/**
+	 * Lee los nombres de los modelos y los convierte en clase Modelo
 	 * Models must be saved as a string like this: [modelName].json 
 	 * @param modelsTxt
 	 * @throws IOException
@@ -139,15 +172,11 @@ public class AdministradorModelos implements IAdministradorModelos {
 		reader.close();
 	}
 	
-	private void createModelFolder(String nombre){// TODO
-		File mainFolder = new File(MODELS_DIRECTORY);
+	private void createModelFolder(String nombre) throws IOException{
+		File mainFolder = new File(NEW_MODEL_TEMPLATE+nombre);
 		if(!mainFolder.exists()){
 			mainFolder.getParentFile().mkdir();
-			
-			File newModel = new File(NEW_MODEL_TEMPLATE+nombre);
-		}
-		else{
-			
+			mainFolder.createNewFile();
 		}
 	}
 

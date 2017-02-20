@@ -3,11 +3,13 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,17 +22,21 @@ public class PanelConfiguracion extends JPanel {
 	private static final long serialVersionUID = -6938563747928859229L;
 
 	private BackendView principal;
-
 	/**
 	 * 0: LR 1: DRL 2: MR 3: epoch num 4: imgxepoch
 	 */
-	private JTextField[] txts;
+	private JFormattedTextField[] txts;
 	private JCheckBox chkNesterov;
 	private JButton btnGuardar;
 
 	private JFileChooser jfc;
 
 	public PanelConfiguracion(BackendView ventana) {
+		
+		NumberFormat nf = NumberFormat.getPercentInstance();
+		nf.setMaximumFractionDigits(5);
+		nf.setMaximumIntegerDigits(1);
+		NumberFormat intf = NumberFormat.getIntegerInstance();
 		principal = ventana;
 		this.setLayout(new GridLayout(0, 1));
 		jfc = new JFileChooser();
@@ -38,11 +44,14 @@ public class PanelConfiguracion extends JPanel {
 		
 		btnGuardar = new JButton("Guardar cambios");
 		chkNesterov = new JCheckBox("Tecnica Nesterov");
-		txts = new JTextField[5];
-
-		for (int i = 0; i < txts.length; i++) {
-			txts[i] = new JTextField();
-		}
+		txts = new JFormattedTextField[5];
+		
+		txts[0] = new JFormattedTextField(nf);
+		txts[1] = new JFormattedTextField(nf);
+		txts[2] = new JFormattedTextField(nf);
+		txts[3] = new JFormattedTextField(intf);
+		txts[4] = new JFormattedTextField(intf);
+		
 		initPnlConfig();
 	}
 

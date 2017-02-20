@@ -15,9 +15,9 @@ public class Modelo {
 	 * @param pesos
 	 * @param arquitectura
 	 */
-	public Modelo(String nombre, String pesos, String arquitectura) {
-		// TODO - implement Modelo.Modelo
-		throw new UnsupportedOperationException();
+	public Modelo(String nombre) {
+		id = nombre.getBytes().hashCode();
+		this.nombre = nombre;
 	}
 
 	public String getRutaArchivoPesos() {
@@ -31,13 +31,11 @@ public class Modelo {
 	}
 
 	public String getNombre() {
-		// TODO - implement Modelo.getNombre
-		throw new UnsupportedOperationException();
+		return nombre;
 	}
 
-	public String getID() {
-		// TODO - implement Modelo.getID
-		throw new UnsupportedOperationException();
+	public int getID() {
+		return id;
 	}
 
 	public String getRutaRunConfig() {

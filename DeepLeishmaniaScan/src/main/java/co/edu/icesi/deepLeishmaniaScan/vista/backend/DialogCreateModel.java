@@ -1,18 +1,20 @@
 package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import java.awt.Font;
 import javax.swing.SwingConstants;
 
 public class DialogCreateModel extends JDialog implements ActionListener {
@@ -92,26 +94,29 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO verificar inputs
-		if (txtGeneraciones.getText().equals("") || Integer.parseInt(txtGeneraciones.getText())==0) {
+		String gen = txtGeneraciones.getText();
+		String name = txtNombre.getText();
+		String imgXG = txtImgXGeneracion.getText();
+		String tasaA = txtTasaDeAprendizaje.getText();
+		String tasaD = txtDecadencia.getText();
+		if (gen.equals("") || Integer.parseInt(gen)==0) {
 			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacío");
 		}
-		else if (txtNombre.getText().equals("")) {
+		else if (name.equals("")) {
 			JOptionPane.showMessageDialog(this, "Elija un nombre para el modelo");
 		}
-		else if (txtImgXGeneracion.getText().equals("") || Integer.parseInt(txtGeneraciones.getText())<100) {
+		else if (imgXG.equals("") || Integer.parseInt(imgXG.trim())<100) {
 			JOptionPane.showMessageDialog(this, "El numero de imagenes por generacion debe ser al menos 100");
 		}
-		else if (txtTasaDeAprendizaje.getText().equals("")) {
+		else if (tasaA.equals("") || Double.parseDouble(tasaA)>= 1) {
 			JOptionPane.showMessageDialog(this, "Defina una tasa de aprendizaje");
 
 		}
-		else if (txtDecadencia.getText().equals("")) {
-			JOptionPane.showMessageDialog(this, "Defina una tasa de decadencia");
+		else if (tasaD.equals("") || Double.parseDouble(tasaD)>= Double.parseDouble(tasaA)) {
+			JOptionPane.showMessageDialog(this, "Defina una tasa de decadencia menor que la tasa de aprendizaje");
 		}
 		else{
-			String[] runconfig = {txtGeneraciones.getText(),txtImgXGeneracion.getText()
-					,txtTasaDeAprendizaje.getText(),txtDecadencia.getText()
-					,rbtnNesterov.isSelected()+"", txtNombre.getText()};
+			String[] runconfig = {gen,imgXG,tasaA,tasaD,rbtnNesterov.isSelected()+"", name};
 		principal.crearModelo(txtNombre.getText(), runconfig);
 		}
 	}

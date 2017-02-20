@@ -45,6 +45,6 @@ public interface IAdministradorModelos {
 	 */
 	public void crearModelo(String nombre, String[] runConfigParams) throws Exception;
 	
-	public void guardarModelo(String modelId, String[] runconfigParams) throws Exception;
+	public void guardarModelo(Modelo model, String[] runconfigParams) throws Exception;
 	
 }

@@ -6,13 +6,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.tools.DiagnosticListener;
 
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
@@ -20,7 +25,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 	
 	private BackendView principal;
 	
-	private JList<Modelo> listaModelos;
+	private JList listaModelos;
 	
 	private Modelo modeloSeleccionado;
 
@@ -28,21 +33,22 @@ public class PanelModelos extends JPanel implements ActionListener {
 
 	private JButton btnNuevoModelo;
 	
+	private DefaultListModel<Modelo> dlm;
 	
 	public PanelModelos(BackendView ventana){
 		principal = ventana;
 		setLayout(new BorderLayout());
-		listaModelos = new JList<>();
+		fillDLF();
+		listaModelos = new JList<>(dlm);
 		listaModelos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		listaModelos.addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				modeloSeleccionado = (Modelo)e.getSource();
+				habilitarHiperP();
 			}
 		});
-		listaModelos.setListData((Modelo[]) principal.getListaModelos().toArray());
 		this.add(listaModelos, BorderLayout.CENTER);
 		
 		
@@ -75,6 +81,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 		gbc_btnNewButton_1.gridx = 10;
 		gbc_btnNewButton_1.gridy = 0;
 		panel_1.add(btnNuevoModelo, gbc_btnNewButton_1);
+		deshabilitarHiperP();
 		
 	}
 
@@ -87,7 +94,8 @@ public class PanelModelos extends JPanel implements ActionListener {
 		String com = e.getActionCommand();
 		switch(com){
 		case "NM":
-			JOptionPane.showMessageDialog(this, "new model");
+			DialogCreateModel dlg = new DialogCreateModel(principal);
+			dlg.setVisible(true);
 			break;
 			
 		case "EH":
@@ -97,5 +105,18 @@ public class PanelModelos extends JPanel implements ActionListener {
 		}
 	}
 	
+	public void habilitarHiperP(){
+		btnEditarHiperparametros.setEnabled(true);
+	}
+	public void deshabilitarHiperP(){
+		btnEditarHiperparametros.setEnabled(false);
+	}
+	
+	private void fillDLF(){
+		dlm = new DefaultListModel<>();
+		for (Modelo modelo : principal.getListaModelos()) {
+			dlm.addElement(modelo);
+		}
+	}
 
 }

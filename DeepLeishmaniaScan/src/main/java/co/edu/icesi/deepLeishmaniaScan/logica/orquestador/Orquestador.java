@@ -85,16 +85,16 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 	
 	@Override
-	public void guardarModelo(String modelId, String[] runconfigParams) throws Exception {
-		administradorModelos.guardarModelo(modelId, runconfigParams);
+	public void guardarModelo(Modelo model, String[] runconfigParams) throws Exception {
+		administradorModelos.guardarModelo(model, runconfigParams);
 	}
 	
 	////////////////////////////////////////
 	////////////////////////////////////////
 	
 	private static void init() {
-		administradorImagenes = new AdministradorImagenes();
 		administradorModelos = new AdministradorModelos();
+		administradorImagenes = new AdministradorImagenes();
 		clasificacion = new Clasificacion();
 		entrenamiento = new Entrenamiento();
 	}

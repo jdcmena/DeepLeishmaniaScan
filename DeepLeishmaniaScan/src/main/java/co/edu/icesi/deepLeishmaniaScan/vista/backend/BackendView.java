@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
@@ -58,7 +60,7 @@ public class BackendView extends JFrame implements ActionListener {
 		panelConfiguracion = new PanelConfiguracion(this);
 		panelModelos = new PanelModelos(this);
 		getContentPane().add(panelConfiguracion, BorderLayout.CENTER);
-		getContentPane().add(panelModelos, BorderLayout.EAST);
+		getContentPane().add(panelModelos, BorderLayout.WEST);
 
 	}
 	public List<Modelo> getListaModelos(){
@@ -69,7 +71,13 @@ public class BackendView extends JFrame implements ActionListener {
 		orquestador.cargarNuevasImagenes(path);
 	}
 	public void crearModelo(String nombre, String[] runConfig){
-		
+		try{
+		orquestador.crearModelo(nombre, runConfig);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
 	}
 
 	@Override
