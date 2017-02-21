@@ -86,7 +86,9 @@ public class PanelConfiguracion extends JPanel {
 	
 	public void mostrarHiperparametros(Modelo modelo){//TODO
 		final Gson gson = new Gson();
-		Properties prop = gson.fromJson(modelo.getRunConfigPath(), Properties.class);
+		Object prop = gson.fromJson(modelo.getRunConfigPath(), Object.class); //malformedJson
+		
+		System.out.println(prop.getClass().toString());
 		
 	}
 	
