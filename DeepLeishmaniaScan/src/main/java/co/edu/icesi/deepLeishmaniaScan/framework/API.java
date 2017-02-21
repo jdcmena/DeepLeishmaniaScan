@@ -35,14 +35,12 @@ public class API implements IAPI{
 		p = Runtime.getRuntime().exec(test_com);
 		}
 		catch(IOException io){
-			System.out.println("catched IOExcp");
 			p = Runtime.getRuntime().exec("cd ~");
 			p.waitFor();
 			p = Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan");
 			p.waitFor();
 			p = Runtime.getRuntime().exec(test_com);
 			p.waitFor();
-			System.out.println("folder created");
 		}
 		  final InputStream stream = p.getInputStream();
 		  new Thread(new Runnable() {

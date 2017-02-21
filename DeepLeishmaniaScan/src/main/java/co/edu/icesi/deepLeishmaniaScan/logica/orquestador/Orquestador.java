@@ -2,6 +2,9 @@ package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 
 import java.io.IOException;
 import java.util.List;
+
+import org.apache.logging.log4j.core.Logger;
+
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.IAdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.AdministradorModelos;
@@ -14,10 +17,11 @@ import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IEntrenamiento;
 
 public class Orquestador implements IAdministradorImagenes, IAdministradorModelos, IClasificacion, IEntrenamiento {
 	
-	public static IAdministradorImagenes administradorImagenes;
-	public static IAdministradorModelos administradorModelos;
-	public static IClasificacion clasificacion;
-	public static IEntrenamiento entrenamiento;
+	
+	private IAdministradorImagenes administradorImagenes;
+	private IAdministradorModelos administradorModelos;
+	private IClasificacion clasificacion;
+	private IEntrenamiento entrenamiento;
 
 	public Orquestador() {
 		init();
@@ -92,7 +96,7 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	////////////////////////////////////////
 	////////////////////////////////////////
 	
-	private static void init() {
+	private void init() {
 		administradorModelos = new AdministradorModelos();
 		administradorImagenes = new AdministradorImagenes();
 		clasificacion = new Clasificacion();

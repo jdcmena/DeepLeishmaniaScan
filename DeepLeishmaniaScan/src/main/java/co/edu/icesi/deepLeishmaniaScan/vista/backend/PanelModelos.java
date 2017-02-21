@@ -34,6 +34,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 	private JButton btnNuevoModelo;
 
 	private DefaultListModel<Modelo> dlm;
+	
 	private JButton btnNewButton;
 
 	public PanelModelos(BackendView ventana) {

@@ -80,7 +80,7 @@ public class BackendView extends JFrame implements ActionListener {
 		}
 	}
 	
-	public void modeloSeleccionado(Modelo modelo){//TODO
+	public void modeloSeleccionado(Modelo modelo){
 		panelConfiguracion.mostrarHiperparametros(modelo);
 	}
 	@Override

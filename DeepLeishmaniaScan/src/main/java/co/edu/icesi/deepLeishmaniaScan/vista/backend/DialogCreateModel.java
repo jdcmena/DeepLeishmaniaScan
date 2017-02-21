@@ -95,7 +95,6 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO verificar inputs
 		String gen = txtGeneraciones.getText();
 		String name = txtNombre.getText();
 		String imgXG = txtImgXGeneracion.getText();

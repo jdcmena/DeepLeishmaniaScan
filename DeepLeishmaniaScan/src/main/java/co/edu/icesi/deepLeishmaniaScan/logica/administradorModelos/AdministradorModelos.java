@@ -6,13 +6,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.spi.LoggerContextFactory;
 
 import com.google.gson.Gson;
 
 public class AdministradorModelos implements IAdministradorModelos {
+		
 	private static final char OS = File.separatorChar;
 	private static final String MODELS_DIRECTORY = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "models"
 			+ OS + "";
@@ -43,16 +46,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 * Cuando se va a guardar un modelo NUEVO
 	 */
 	@Override
-	public void guardarModelo(Modelo model, String[] runConfigParams) throws Exception { // TODO
-																							// Ready
-																							// to
-																							// Test
+	public void guardarModelo(Modelo model, String[] runConfigParams) throws Exception {
+		
 		final Gson gson = new Gson();
 		String folderPath = NEW_MODEL_TEMPLATE + model.getID() + OS;
 		String jsonRunConfigPath = NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig.json";
 		model.setRunConfigRoute(jsonRunConfigPath);
 		File modelJson = new File(folderPath);
-		// modelJson.mkdirs();
 		modelJson.mkdir();
 		modelJson.createNewFile();
 
@@ -80,7 +80,9 @@ public class AdministradorModelos implements IAdministradorModelos {
 		FileWriter fw = new FileWriter(modelList);
 
 		BufferedWriter bw = new BufferedWriter(fw);
-		bw.append(model.getID()+"");
+		bw.append(Integer.toString(model.getID()));
+		fw.flush();
+		fw.close();
 		fw1.close();
 		fw2.close();
 		bw.close();
@@ -95,8 +97,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	@Override
 	public Modelo getModeloPorId(String id) throws IOException {
 		final Gson gson = new Gson();
-		Modelo prop = gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE + id + OS + id + ".json"), Modelo.class);
-		return prop;
+		return gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE + id + OS + id + ".json"), Modelo.class);
 	}
 
 	/**
@@ -130,10 +131,10 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 *            name
 	 */
 	@Override
-	public void crearModelo(String nombre, String[] runConfigParams) throws Exception { // TODO
+	public void crearModelo(String nombre, String[] runConfigParams) throws Exception {
 		Modelo modelo = new Modelo(nombre);
-		if (!modelExist(modelo.getID() + "")) {
-			createModelFolder(modelo.getID() + "");
+		if (!modelExist(Integer.toString(modelo.getID()))) {
+			createModelFolder(Integer.toString(modelo.getID()));
 		}
 		guardarModelo(modelo, runConfigParams);
 
@@ -148,7 +149,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 */
 	private boolean modelExist(String modelId) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(new File(MODELS_LIST)));
-		String line = "";
+		String line;
 		while ((line = reader.readLine()) != null) {
 			if (line.equals(modelId)) {
 				reader.close();
@@ -174,15 +175,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 		if (!mainFolder.exists()) {
 			mainFolder.mkdirs();
 			mainFolder.createNewFile();
-			System.out.println(mainFolder.getAbsolutePath());
 		}
 		File modelList = new File(MODELS_LIST);
 		if (!modelList.exists()) {
 			modelList.getParentFile().mkdirs();
 			modelList.createNewFile();
 		}
-		System.out.println(modelList.getAbsolutePath());
-		loadSavedModels(modelList);
+		loadSavedModels();
 	}
 
 	/**
@@ -192,11 +191,11 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 * @param modelsTxt
 	 * @throws IOException
 	 */
-	private void loadSavedModels(File modelsTxt) throws IOException { // TODO
+	private void loadSavedModels() throws IOException {
 		
 		listaModelos = new ArrayList<>();
 		BufferedReader reader = new BufferedReader(new FileReader(new File(MODELS_LIST)));
-		String line = "";
+		String line;
 		while ((line = reader.readLine()) != null) {
 			Modelo modelo = getModeloPorId(line);
 			listaModelos.add(modelo);
