@@ -79,7 +79,10 @@ public class BackendView extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 	}
-
+	
+	public void modeloSeleccionado(Modelo modelo){//TODO
+		panelConfiguracion.mostrarHiperparametros(modelo);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {

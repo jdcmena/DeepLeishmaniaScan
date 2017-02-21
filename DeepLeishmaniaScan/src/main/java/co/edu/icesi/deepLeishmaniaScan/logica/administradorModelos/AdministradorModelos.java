@@ -50,7 +50,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		final Gson gson = new Gson();
 		String folderPath = NEW_MODEL_TEMPLATE + model.getID() + OS;
 		String jsonRunConfigPath = NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig.json";
-
+		model.setRunConfigRoute(jsonRunConfigPath);
 		File modelJson = new File(folderPath);
 		// modelJson.mkdirs();
 		modelJson.mkdir();
@@ -60,7 +60,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		modelJson.getParentFile().mkdirs();
 		modelJson.createNewFile();
 
-		File modelJsonRunConfig = new File(NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig.json");
+		File modelJsonRunConfig = new File(jsonRunConfigPath);
 		modelJsonRunConfig.getParentFile().mkdirs();
 		modelJsonRunConfig.createNewFile();
 		
@@ -75,6 +75,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw2.flush();
 		//gson.toJson(j1, fw1);
 		//gson.toJson(j2, fw2);
+		
 		File modelList = new File(MODELS_LIST);
 		FileWriter fw = new FileWriter(modelList);
 
@@ -92,8 +93,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 * @param id
 	 */
 	@Override
-	public Modelo getModeloPorId(String id) throws IOException { // TODO Ready
-																	// to test
+	public Modelo getModeloPorId(String id) throws IOException {
 		final Gson gson = new Gson();
 		Modelo prop = gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE + id + OS + id + ".json"), Modelo.class);
 		return prop;

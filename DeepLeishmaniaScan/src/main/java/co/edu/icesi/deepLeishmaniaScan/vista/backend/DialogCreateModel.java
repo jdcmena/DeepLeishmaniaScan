@@ -29,8 +29,10 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 	private JButton btnCrearModelo;
 
 	private BackendView principal;
+	private PanelModelos panelModelos;
 
-	public DialogCreateModel(BackendView ventana) {
+	public DialogCreateModel(BackendView ventana, PanelModelos panelModelos) {
+		this.panelModelos = panelModelos;
 		principal = ventana;
 		setTitle("Crear nuevo modelo");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -100,7 +102,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		String tasaA = txtTasaDeAprendizaje.getText();
 		String tasaD = txtDecadencia.getText();
 		if (gen.equals("") || Integer.parseInt(gen)==0) {
-			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacío");
+			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacï¿½o");
 		}
 		else if (name.equals("")) {
 			JOptionPane.showMessageDialog(this, "Elija un nombre para el modelo");
@@ -118,6 +120,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		else{
 			String[] runconfig = {gen,imgXG,tasaA,tasaD,rbtnNesterov.isSelected()+"", name};
 		principal.crearModelo(txtNombre.getText(), runconfig);
+		panelModelos.fillDLF();
 		}
 	}
 

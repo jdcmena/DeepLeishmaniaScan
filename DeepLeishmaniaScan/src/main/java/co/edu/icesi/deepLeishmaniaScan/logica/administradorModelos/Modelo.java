@@ -10,10 +10,18 @@ public class Modelo {
 	private String metricas;
 
 	/**
-	 * 
+	 * Constructor con ruta de archivo de configuracion
+	 * @param nombre 
+	 * @param runConfig ruta del archivo json de configuracion
+	 */
+	public Modelo(String nombre, String runConfig) {
+		id = nombre.getBytes().hashCode();
+		this.nombre = nombre;
+		this.runConfig = runConfig;
+	}
+	/**
+	 * Constructor sin ruta de archivo de configuracion
 	 * @param nombre
-	 * @param pesos
-	 * @param arquitectura
 	 */
 	public Modelo(String nombre) {
 		id = nombre.getBytes().hashCode();
@@ -37,6 +45,10 @@ public class Modelo {
 	public int getID() {
 		return id;
 	}
+	
+	public String getRunConfigPath(){
+		return runConfig;
+	}
 
 	public String getRutaRunConfig() {
 		// TODO - implement Modelo.getRutaRunConfig
@@ -46,6 +58,9 @@ public class Modelo {
 	public String[] getMetricas() {
 		// TODO - implement Modelo.getMetricas
 		throw new UnsupportedOperationException();
+	}
+	public void setRunConfigRoute(String runConfig){
+		this.runConfig = runConfig;
 	}
 
 	@Override

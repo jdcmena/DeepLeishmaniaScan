@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,7 +13,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
+import com.google.gson.Gson;
+
+import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
 public class PanelConfiguracion extends JPanel {
 
@@ -78,6 +82,12 @@ public class PanelConfiguracion extends JPanel {
 
 		add(btnGuardar, BorderLayout.SOUTH);
 
+	}
+	
+	public void mostrarHiperparametros(Modelo modelo){//TODO
+		final Gson gson = new Gson();
+		Properties prop = gson.fromJson(modelo.getRunConfigPath(), Properties.class);
+		
 	}
 	
 	public void showFileChooser() throws IOException{
