@@ -7,6 +7,7 @@ public class Modelo {
 	private String pesos;
 	private String arquitectura;
 	private String runConfig;
+	private String direccionDirectorio;
 	private String metricas;
 
 	/**
@@ -14,8 +15,9 @@ public class Modelo {
 	 * @param nombre 
 	 * @param runConfig ruta del archivo json de configuracion
 	 */
-	public Modelo(String nombre, String runConfig) {
-		id = nombre.getBytes().hashCode();
+	public Modelo(String nombre, String runConfig, String direccionDirectorio) {
+		id = nombre.getBytes().hashCode()+runConfig.hashCode();
+		this.direccionDirectorio = direccionDirectorio;
 		this.nombre = nombre;
 		this.runConfig = runConfig;
 	}
@@ -50,9 +52,12 @@ public class Modelo {
 		return runConfig;
 	}
 
-	public String getRutaRunConfig() {
-		// TODO - implement Modelo.getRutaRunConfig
-		throw new UnsupportedOperationException();
+	public String getRutaDirectorioModelo() {
+		return direccionDirectorio;
+	}
+	
+	public void setRutaDirectorioModelo(String direccionDirectorio) {
+		this.direccionDirectorio = direccionDirectorio;
 	}
 
 	public String[] getMetricas() {

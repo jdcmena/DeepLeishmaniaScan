@@ -6,16 +6,18 @@ public interface IEntrenamiento {
 	 * obtener las metricas de un modelo
 	 * @param path url del modelo
 	 * @return string[3]
-	 * 0: precisión
+	 * 0: precisiï¿½n
 	 * 1: sensibilidad
 	 * 2: especificidad
+	 * @throws Exception 
 	 */
-	public String[] obtenerMetricas(String path);
+	public String[] obtenerMetricas(String path) throws Exception;
 	/**
 	 * ejecuta el script de entrenamiento
 	 * @param path ruta del modelo a entrenar
 	 * @return TODO
+	 * @throws Exception 
 	 */
-	public double[] entrenar(String path);
+	public double[] entrenar(String path) throws Exception;
 	
 }

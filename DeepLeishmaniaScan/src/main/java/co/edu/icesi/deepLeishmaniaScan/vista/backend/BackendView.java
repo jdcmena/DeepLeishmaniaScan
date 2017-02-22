@@ -12,10 +12,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
 public class BackendView extends JFrame implements ActionListener {
+	
+	private static final Logger log = LoggerFactory.getLogger(BackendView.class);
 
 	/**
 	 * 
@@ -63,6 +68,15 @@ public class BackendView extends JFrame implements ActionListener {
 		getContentPane().add(panelConfiguracion, BorderLayout.CENTER);
 		getContentPane().add(panelModelos, BorderLayout.WEST);
 
+	}
+	public void entrenar(){
+		try{
+		orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			log.info(e.getMessage());
+		}
 	}
 	
 	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaD, boolean selected,

@@ -24,7 +24,6 @@ public class AdministradorModelos implements IAdministradorModelos {
 			+ OS + "";
 	private static final String MODELS_LIST = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "modelsList.txt";
 	private static final String JSON_EXT = ".json";
-	private static final String NEW_MODEL_TEMPLATE = MODELS_DIRECTORY;
 
 	private ArrayList<Modelo> listaModelos;
 
@@ -57,8 +56,9 @@ public class AdministradorModelos implements IAdministradorModelos {
 		FileWriter fw2 = null;
 		try {
 			final Gson gson = new Gson();
-			String folderPath = NEW_MODEL_TEMPLATE + model.getID() + OS;
-			String jsonRunConfigPath = NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig" + JSON_EXT;
+			String folderPath = MODELS_DIRECTORY + model.getID() + OS;
+			String jsonRunConfigPath = MODELS_DIRECTORY + model.getID() + OS + "runconfig" + JSON_EXT;
+			model.setRutaDirectorioModelo(folderPath);
 			model.setRunConfigRoute(jsonRunConfigPath);
 			File modelJson = new File(folderPath);
 			modelJson.mkdir();
@@ -117,7 +117,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	@Override
 	public Modelo getModeloPorId(String id) throws IOException {
 		final Gson gson = new Gson();
-		return gson.fromJson(new FileReader(NEW_MODEL_TEMPLATE + id + OS + id + ".json"), Modelo.class);
+		return gson.fromJson(new FileReader(MODELS_DIRECTORY + id + OS + id + ".json"), Modelo.class);
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	}
 
 	private void createModelFolder(String nombre) throws IOException {
-		File mainFolder = new File(NEW_MODEL_TEMPLATE + nombre);
+		File mainFolder = new File(MODELS_DIRECTORY + nombre);
 		if (!mainFolder.exists()) {
 			mainFolder.mkdir();
 			mainFolder.createNewFile();

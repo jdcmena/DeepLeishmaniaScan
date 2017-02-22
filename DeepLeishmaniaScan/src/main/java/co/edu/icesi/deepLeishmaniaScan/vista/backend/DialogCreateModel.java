@@ -120,6 +120,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 			
 		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaD, rbtnNesterov.isSelected(), name);
 		panelModelos.fillDLF();
+		this.dispose();
 		}
 	}
 

@@ -28,12 +28,12 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public String[] obtenerMetricas(String path) {
+	public String[] obtenerMetricas(String path) throws Exception{
 		return entrenamiento.obtenerMetricas(path);
 	}
 
 	@Override
-	public double[] entrenar(String path) {
+	public double[] entrenar(String path) throws Exception{
 		return entrenamiento.entrenar(path);
 	}
 

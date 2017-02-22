@@ -1,0 +1,1 @@
+{"generaciones":10,"imagenesPorGeneracion":200,"tasaAprendizaje":0.001,"tasaDecadencia":1.0E-4,"nesterov":false,"nombre":"q"}

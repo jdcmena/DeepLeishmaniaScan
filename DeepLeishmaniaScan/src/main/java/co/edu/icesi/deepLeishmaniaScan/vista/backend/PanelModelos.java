@@ -88,7 +88,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 		gbc_btnNewButton_1.gridy = 0;
 		panel_1.add(btnNuevoModelo, gbc_btnNewButton_1);
 		deshabilitarEntrenar();
-
 	}
 
 	public Modelo getModeloSeleccionado() {
@@ -104,8 +103,8 @@ public class PanelModelos extends JPanel implements ActionListener {
 			dlg.setVisible(true);
 			break;
 
-		case "EH":
-			JOptionPane.showMessageDialog(this, "edit hiperparameters");
+		case "EM":
+			principal.entrenar();
 			break;
 
 		}
@@ -124,6 +123,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 		for (Modelo modelo : principal.getListaModelos()) {
 			dlm.addElement(modelo);
 		}
+		this.repaint();
 	}
 
 }

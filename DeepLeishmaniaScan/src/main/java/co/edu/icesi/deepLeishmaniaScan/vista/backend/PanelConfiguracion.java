@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
@@ -92,10 +93,14 @@ public class PanelConfiguracion extends JPanel {
 	}
 	
 	public void mostrarHiperparametros(Modelo modelo) throws FileNotFoundException{
+		JsonParser parser = new JsonParser();
+		JsonObject obj = (JsonObject) parser.parse(new FileReader(modelo.getRunConfigPath()));
+		/*
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonReader reader = new JsonReader(new BufferedReader(new FileReader(modelo.getRunConfigPath())));
 		reader.setLenient(true);
 		JsonObject obj = gson.fromJson(reader, JsonObject.class);
+		*/
 		log.info(obj.get("nombre").toString());		
 	}
 	
