@@ -3,6 +3,7 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JFrame;
@@ -63,6 +64,20 @@ public class BackendView extends JFrame implements ActionListener {
 		getContentPane().add(panelModelos, BorderLayout.WEST);
 
 	}
+	
+	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaD, boolean selected,
+			String name) {
+		
+		try{
+			orquestador.crearModelo(gen, imgXG, tasaA, tasaD, selected, name);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, e.getMessage());
+			}
+		
+	}
+	
 	public List<Modelo> getListaModelos(){
 		return orquestador.getListaModelos();
 	}
@@ -70,18 +85,14 @@ public class BackendView extends JFrame implements ActionListener {
 	public void cargarNuevasImagenes(String path) {
 		orquestador.cargarNuevasImagenes(path);
 	}
-	public void crearModelo(String nombre, String[] runConfig){
-		try{
-		orquestador.crearModelo(nombre, runConfig);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, e.getMessage());
-		}
-	}
 	
 	public void modeloSeleccionado(Modelo modelo){
+		try{
 		panelConfiguracion.mostrarHiperparametros(modelo);
+		}
+		catch(FileNotFoundException e){
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

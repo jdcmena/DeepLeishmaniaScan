@@ -30,21 +30,23 @@ public interface IAdministradorModelos {
 	 */
 	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr, boolean nesterov);
 	
+	/**
+	 * devuelve la lista de modelos cargados en memoria
+	 * @return
+	 */
 	public List<Modelo> getListaModelos();
 	
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean selected) throws Exception;
 	/**
 	 * 
-	 * @param runConfigParams has:
-	 * [0]: epoch number: int
-	 * [1]: images per epoch: int
-	 * [2]: learning rate : double
-	 * [3]: decay rate of learning rate : double
-	 * [4]: nesterov technique for optimization: boolean
-	 * [5]: name
-	 * @throws Exception 
+	 * @param gen numero de generaciones
+	 * @param imgXG numero de imagenes por generacion
+	 * @param tasaA tasa de aprendizaje
+	 * @param tasaD tasa de decadencia de la tasa de aprendizaje
+	 * @param selected uso de la tecnica de optimizacion nesterov
+	 * @param name nombre de modelo
+	 * @throws Exception
 	 */
-	public void crearModelo(String nombre, String[] runConfigParams) throws Exception;
-	
-	public void guardarModelo(Modelo model, String[] runconfigParams) throws Exception;
+	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name) throws Exception;
 	
 }

@@ -64,8 +64,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public void crearModelo(String nombre, String[] runConfigParams) throws Exception{
-		administradorModelos.crearModelo(nombre, runConfigParams);
+	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name) throws Exception{
+		administradorModelos.crearModelo(gen, imgXG, tasaA,tasaD,selected,name);
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 	
 	@Override
-	public void guardarModelo(Modelo model, String[] runconfigParams) throws Exception {
-		administradorModelos.guardarModelo(model, runconfigParams);
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean selected) throws Exception {
+		administradorModelos.guardarModelo(model, gen, imgXG, tasaA, tasaD, selected);
 	}
 	
 	////////////////////////////////////////
@@ -102,6 +102,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 		clasificacion = new Clasificacion();
 		entrenamiento = new Entrenamiento();
 	}
+
+
 
 
 	

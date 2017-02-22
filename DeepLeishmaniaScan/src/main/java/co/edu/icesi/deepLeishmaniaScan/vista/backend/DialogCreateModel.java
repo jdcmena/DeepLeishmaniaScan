@@ -95,30 +95,30 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		String gen = txtGeneraciones.getText();
+		int gen = Integer.parseInt(txtGeneraciones.getText().trim());
 		String name = txtNombre.getText();
-		String imgXG = txtImgXGeneracion.getText();
-		String tasaA = txtTasaDeAprendizaje.getText();
-		String tasaD = txtDecadencia.getText();
-		if (gen.equals("") || Integer.parseInt(gen)==0) {
-			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vac�o");
+		int imgXG = Integer.parseInt(txtImgXGeneracion.getText().trim());
+		double tasaA = Double.parseDouble(txtTasaDeAprendizaje.getText().trim());
+		double tasaD = Double.parseDouble(txtDecadencia.getText().trim());
+		if (gen <= 0) {
+			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacio");
 		}
 		else if (name.equals("")) {
 			JOptionPane.showMessageDialog(this, "Elija un nombre para el modelo");
 		}
-		else if (imgXG.equals("") || Integer.parseInt(imgXG.trim())<100) {
+		else if (imgXG<100) {
 			JOptionPane.showMessageDialog(this, "El numero de imagenes por generacion debe ser al menos 100");
 		}
-		else if (tasaA.equals("") || Double.parseDouble(tasaA)>= 1) {
-			JOptionPane.showMessageDialog(this, "Defina una tasa de aprendizaje");
+		else if (tasaA>10 || tasaA<=0) {
+			JOptionPane.showMessageDialog(this, "Defina una tasa de aprendizaje entre 0 y 10");
 
 		}
-		else if (tasaD.equals("") || Double.parseDouble(tasaD)>= Double.parseDouble(tasaA)) {
+		else if (tasaD >= tasaA) {
 			JOptionPane.showMessageDialog(this, "Defina una tasa de decadencia menor que la tasa de aprendizaje");
 		}
 		else{
-			String[] runconfig = {gen,imgXG,tasaA,tasaD,rbtnNesterov.isSelected()+"", name};
-		principal.crearModelo(txtNombre.getText(), runconfig);
+			
+		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaD, rbtnNesterov.isSelected(), name);
 		panelModelos.fillDLF();
 		}
 	}

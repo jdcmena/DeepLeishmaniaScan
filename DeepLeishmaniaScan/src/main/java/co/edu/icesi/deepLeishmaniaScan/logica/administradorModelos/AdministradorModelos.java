@@ -8,27 +8,29 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.*;
-import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.spi.LoggerContextFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
 public class AdministradorModelos implements IAdministradorModelos {
-		
+	
+	private static final Logger log = LoggerFactory.getLogger(AdministradorModelos.class);
+	
 	private static final char OS = File.separatorChar;
 	private static final String MODELS_DIRECTORY = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "models"
 			+ OS + "";
 	private static final String MODELS_LIST = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "modelsList.txt";
+	private static final String JSON_EXT = ".json";
 	private static final String NEW_MODEL_TEMPLATE = MODELS_DIRECTORY;
 
 	private ArrayList<Modelo> listaModelos;
-
 	public AdministradorModelos() {
 		try {
 			createRootModelsFolder();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.info("Constructor de AdministradorModelos");
 		}
 	}
 
@@ -46,17 +48,22 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 * Cuando se va a guardar un modelo NUEVO
 	 */
 	@Override
-	public void guardarModelo(Modelo model, String[] runConfigParams) throws Exception {
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean nesterov) {
 		
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		FileWriter fw1 = null;
+		FileWriter fw2 = null;
+		try{
 		final Gson gson = new Gson();
 		String folderPath = NEW_MODEL_TEMPLATE + model.getID() + OS;
-		String jsonRunConfigPath = NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig.json";
+		String jsonRunConfigPath = NEW_MODEL_TEMPLATE + model.getID() + OS + "runconfig"+JSON_EXT;
 		model.setRunConfigRoute(jsonRunConfigPath);
 		File modelJson = new File(folderPath);
 		modelJson.mkdir();
 		modelJson.createNewFile();
 
-		modelJson = new File(folderPath + model.getID() + ".json");
+		modelJson = new File(folderPath + model.getID() + JSON_EXT);
 		modelJson.getParentFile().mkdirs();
 		modelJson.createNewFile();
 
@@ -64,28 +71,47 @@ public class AdministradorModelos implements IAdministradorModelos {
 		modelJsonRunConfig.getParentFile().mkdirs();
 		modelJsonRunConfig.createNewFile();
 		
-		FileWriter fw1 = new FileWriter(folderPath + model.getID() + ".json");
-		FileWriter fw2 = new FileWriter(jsonRunConfigPath);
+		fw1 = new FileWriter(folderPath + model.getID() + JSON_EXT);
+		fw2 = new FileWriter(jsonRunConfigPath);
 		
 		String j1 = gson.toJson(model);
-		String j2 = gson.toJson(runConfigParams);
+		RunConfigDTO dto = new RunConfigDTO();
+		dto.setGeneraciones(gen);
+		dto.setImagenesPorGeneracion(imgXG);
+		dto.setTasaAprendizaje(tasaA);
+		dto.setTasaDecadencia(tasaD);
+		dto.setNesterov(nesterov);
+		dto.setNombre(model.getNombre());
+		
+		String j2 = gson.toJson(dto);
 		fw1.write(j1);
 		fw2.write(j2);
-		fw1.flush();
-		fw2.flush();
-		//gson.toJson(j1, fw1);
-		//gson.toJson(j2, fw2);
+		
 		
 		File modelList = new File(MODELS_LIST);
-		FileWriter fw = new FileWriter(modelList);
+		fw = new FileWriter(modelList);
 
-		BufferedWriter bw = new BufferedWriter(fw);
+		bw = new BufferedWriter(fw);
 		bw.append(Integer.toString(model.getID()));
-		fw.flush();
-		fw.close();
-		fw1.close();
-		fw2.close();
-		bw.close();
+		}
+		catch(Exception e){
+			
+		}
+		finally{
+			try{
+			fw1.flush();
+			fw2.flush();
+			fw.flush();
+			fw.close();
+			fw1.close();
+			fw2.close();
+			bw.close();
+			}
+			catch(Exception e){
+				
+			}
+		}
+		
 
 	}
 
@@ -131,12 +157,12 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 *            name
 	 */
 	@Override
-	public void crearModelo(String nombre, String[] runConfigParams) throws Exception {
-		Modelo modelo = new Modelo(nombre);
+	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name) throws Exception {
+		Modelo modelo = new Modelo(name);
 		if (!modelExist(Integer.toString(modelo.getID()))) {
 			createModelFolder(Integer.toString(modelo.getID()));
 		}
-		guardarModelo(modelo, runConfigParams);
+		guardarModelo(modelo, gen, imgXG, tasaA, tasaD, selected);
 
 	}
 

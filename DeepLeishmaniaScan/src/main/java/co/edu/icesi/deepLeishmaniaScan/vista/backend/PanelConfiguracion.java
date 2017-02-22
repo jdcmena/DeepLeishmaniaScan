@@ -2,10 +2,11 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Properties;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -14,12 +15,18 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
 public class PanelConfiguracion extends JPanel {
 
+	private static final Logger log = LoggerFactory.getLogger(PanelConfiguracion.class);
 	/**
 	 * 
 	 */
@@ -84,12 +91,12 @@ public class PanelConfiguracion extends JPanel {
 
 	}
 	
-	public void mostrarHiperparametros(Modelo modelo){//TODO
-		final Gson gson = new Gson();
-		Object prop = gson.fromJson(modelo.getRunConfigPath(), Object.class); //malformedJson
-		
-		System.out.println(prop.getClass().toString());
-		
+	public void mostrarHiperparametros(Modelo modelo) throws FileNotFoundException{
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonReader reader = new JsonReader(new BufferedReader(new FileReader(modelo.getRunConfigPath())));
+		reader.setLenient(true);
+		JsonObject obj = gson.fromJson(reader, JsonObject.class);
+		log.info(obj.get("nombre").toString());		
 	}
 	
 	public void showFileChooser() throws IOException{
