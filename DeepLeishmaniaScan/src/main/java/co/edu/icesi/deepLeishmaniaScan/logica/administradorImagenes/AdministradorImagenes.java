@@ -1,6 +1,8 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 
 import java.io.File;
+import java.util.Iterator;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.slf4j.Logger;
@@ -47,14 +49,12 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	}
 
 	@Override
-	public void cargarNuevasImagenes(String path) throws Exception { //TODO get all images from directory
-		String parent = new File(path).getAbsolutePath();
-		
-		//FileUtils.iterateFiles(parent);
-		for(String img: new File(parent).list()){
-			File origin = new File(parent+img);
-			log.info(origin.exists()?"file exists":"error");
-			File destn = new File(RUTA_CONJUNTO_DE_DATOS + OS + img.hashCode());
+	public void cargarNuevasImagenes(String path) throws Exception {
+		File parent = new File(path);
+		Iterator<File> iter = FileUtils.iterateFiles(parent, null, true);	
+		while(iter.hasNext()){
+			File origin = new File(iter.next().getAbsolutePath());
+			File destn = new File(RUTA_CONJUNTO_DE_DATOS + OS + origin.getName().hashCode());
 			FileUtils.copyFile(origin, destn);
 		}
 	}
