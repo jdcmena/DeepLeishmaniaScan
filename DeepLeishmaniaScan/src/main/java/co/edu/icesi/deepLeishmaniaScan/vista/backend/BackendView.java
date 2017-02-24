@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -48,7 +50,6 @@ public class BackendView extends JFrame implements ActionListener {
 		menuItem = new JMenuItem("Cargar Imagenes nuevas");
 		menuItem.setActionCommand("CARGAR_IMAGENES");
 		menuItem.addActionListener(this);
-		// menuItem.addActionListener(this);
 		menu.add(menuItem);
 		menuBar.add(menu);
 		this.setJMenuBar(menuBar);
@@ -76,7 +77,6 @@ public class BackendView extends JFrame implements ActionListener {
 		try {
 			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.info(e.getMessage());
 		}
 	}
@@ -123,13 +123,26 @@ public class BackendView extends JFrame implements ActionListener {
 		try {
 
 			if (e.getActionCommand().equals("CARGAR_IMAGENES")) {
-				panelConfiguracion.showFileChooser();
+				showFileChooser();
 			}
 		} catch (IOException io) {
 
 		} catch (Exception ex) {
 
 		}
+	}
+	
+	
+	private void showFileChooser() throws IOException{
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jfc.setDialogTitle("Seleccione la carpeta que contenga las imagenes nuevas");
+		int returnVal = jfc.showOpenDialog(this);
+		if(returnVal == JFileChooser.APPROVE_OPTION){
+			String selected = jfc.getSelectedFile().getAbsolutePath();
+			this.cargarImagenesEntrenamiento(selected);
+		}
+		
 	}
 
 	//////////// MAIN

@@ -41,8 +41,6 @@ public class PanelConfiguracion extends JPanel {
 	private JCheckBox chkNesterov;
 	private JButton btnGuardar;
 
-	private JFileChooser jfc;
-
 	public PanelConfiguracion(BackendView ventana) {
 		
 		NumberFormat nf = NumberFormat.getPercentInstance();
@@ -51,8 +49,6 @@ public class PanelConfiguracion extends JPanel {
 		NumberFormat intf = NumberFormat.getIntegerInstance();
 		principal = ventana;
 		this.setLayout(new GridLayout(0, 1));
-		jfc = new JFileChooser();
-		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		btnGuardar = new JButton("Guardar cambios");
 		chkNesterov = new JCheckBox("Tecnica Nesterov");
@@ -102,16 +98,6 @@ public class PanelConfiguracion extends JPanel {
 		JsonObject obj = gson.fromJson(reader, JsonObject.class);
 		*/
 		log.info(obj.get("nombre").toString());		
-	}
-	
-	public void showFileChooser() throws IOException{
-		jfc.setDialogTitle("Seleccione la carpeta que contenga las imagenes nuevas");
-		int returnVal = jfc.showOpenDialog(this);
-		if(returnVal == JFileChooser.APPROVE_OPTION){
-			String selected = jfc.getSelectedFile().getAbsolutePath();
-			principal.cargarImagenesEntrenamiento(selected);
-		}
-		
 	}
 
 }

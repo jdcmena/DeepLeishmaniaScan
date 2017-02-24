@@ -12,17 +12,21 @@ public class Modelo {
 
 	/**
 	 * Constructor con ruta de archivo de configuracion
-	 * @param nombre 
-	 * @param runConfig ruta del archivo json de configuracion
+	 * 
+	 * @param nombre
+	 * @param runConfig
+	 *            ruta del archivo json de configuracion
 	 */
 	public Modelo(String nombre, String runConfig, String direccionDirectorio) {
-		id = nombre.getBytes().hashCode()+runConfig.hashCode();
+		id = nombre.getBytes().hashCode() + runConfig.hashCode();
 		this.direccionDirectorio = direccionDirectorio;
 		this.nombre = nombre;
 		this.runConfig = runConfig;
 	}
+
 	/**
 	 * Constructor sin ruta de archivo de configuracion
+	 * 
 	 * @param nombre
 	 */
 	public Modelo(String nombre) {
@@ -47,15 +51,15 @@ public class Modelo {
 	public int getID() {
 		return id;
 	}
-	
-	public String getRunConfigPath(){
+
+	public String getRunConfigPath() {
 		return runConfig;
 	}
 
 	public String getRutaDirectorioModelo() {
 		return direccionDirectorio;
 	}
-	
+
 	public void setRutaDirectorioModelo(String direccionDirectorio) {
 		this.direccionDirectorio = direccionDirectorio;
 	}
@@ -64,7 +68,8 @@ public class Modelo {
 		// TODO - implement Modelo.getMetricas
 		throw new UnsupportedOperationException();
 	}
-	public void setRunConfigRoute(String runConfig){
+
+	public void setRunConfigRoute(String runConfig) {
 		this.runConfig = runConfig;
 	}
 
@@ -72,6 +77,5 @@ public class Modelo {
 	public String toString() {
 		return "Modelo [id=" + id + ", nombre=" + nombre + "]";
 	}
-	
 
 }
