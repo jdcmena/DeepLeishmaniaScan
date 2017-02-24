@@ -6,12 +6,15 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<dependencies>
 
+		<!-- json utils by google -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.0</version>
 		</dependency>
+		<!-- json utils by google -->
 
+		<!-- log4j, slf4j -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -28,12 +31,25 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.8</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.21</version>
 		</dependency>
+		<!-- log4j, slf4j -->
+
+
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io apache commons 
+			io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io apache commons 
+			io -->
+
 
 	</dependencies>
 

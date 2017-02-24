@@ -3,25 +3,33 @@ package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 public interface IAdministradorImagenes {
 
 	/**
-	 * obtiene la ruta de la carpeta de las imágenes con diagnóstico positivo
-	 * @return dirección canónica del directorio de imagenes con diagnóstico positivo
+	 * obtiene la ruta de la carpeta de las imï¿½genes con diagnï¿½stico positivo
+	 * @return direcciï¿½n canï¿½nica del directorio de imagenes con diagnï¿½stico positivo
 	 */
 	public String getRutaPositivos();
 	/**
-	 * obtiene la ruta de la carpeta de las imágenes con diagnóstico negativo
-	 * @return dirección canónica del directorio de imagenes con diagnóstico negativo
+	 * obtiene la ruta de la carpeta de las imï¿½genes con diagnï¿½stico negativo
+	 * @return direcciï¿½n canï¿½nica del directorio de imagenes con diagnï¿½stico negativo
 	 */
 	public String getRutaNegativos();
 	/**
 	 * obtiene la ruta de la carpeta que contiene todas las imagenes de entrenamiento
-	 * @return dirección canónica del directorio del conjunto de datos
+	 * @return direcciï¿½n canï¿½nica del directorio del conjunto de datos
 	 */
 	public String getRutaConjuntoDeDatos();
 	
 	/**
 	 * Carga imagenes de una carpeta
-	 * @param path la dirección canónica del directorio que contiene las imagenes
+	 * @param path la direcciï¿½n canï¿½nica del directorio que contiene las imagenes
 	 */
-	public void cargarNuevasImagenes(String path);
+	public void cargarNuevasImagenes(String path) throws Exception;
+	
+	/**
+	 * Agrega una imagen clasificada al directorio de imagenes con diagnostico
+	 *  positivos o en el directorio de imagenes con diagnostico negativo dependiendo del caso.
+	 * @param imgPath
+	 * @param positivo
+	 */
+	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception;
 	
 }

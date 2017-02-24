@@ -10,18 +10,19 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.tools.DiagnosticListener;
 
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
 public class PanelModelos extends JPanel implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2400780611744407951L;
 
 	private BackendView principal;
 
@@ -35,8 +36,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 
 	private DefaultListModel<Modelo> dlm;
 	
-	private JButton btnNewButton;
-
 	public PanelModelos(BackendView ventana) {
 		principal = ventana;
 		setLayout(new BorderLayout());
@@ -48,7 +47,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
-				JList<Modelo> source = (JList) e.getSource();
+				JList<Modelo> source = (JList<Modelo>) e.getSource();
 				modeloSeleccionado = (Modelo) source.getSelectedValue();
 				habilitarEntrenar();
 				principal.modeloSeleccionado(modeloSeleccionado);

@@ -5,11 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,6 +16,10 @@ import javax.swing.SwingConstants;
 
 public class DialogCreateModel extends JDialog implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1254961265820183478L;
 	private JTextField txtGeneraciones;
 	private JTextField txtImgXGeneracion;
 	private JTextField txtTasaDeAprendizaje;

@@ -19,7 +19,7 @@ import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
 public class BackendView extends JFrame implements ActionListener {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(BackendView.class);
 
 	/**
@@ -54,9 +54,11 @@ public class BackendView extends JFrame implements ActionListener {
 		this.setJMenuBar(menuBar);
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		orquestador = new Orquestador();
-		
+		try {
+			orquestador = new Orquestador();
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
 		initPnlConfig();
 		pack();
 
@@ -69,45 +71,53 @@ public class BackendView extends JFrame implements ActionListener {
 		getContentPane().add(panelModelos, BorderLayout.WEST);
 
 	}
-	public void entrenar(){
-		try{
-		orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
-		}
-		catch(Exception e){
+
+	public void entrenar() {
+		try {
+			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
+		} catch (Exception e) {
 			e.printStackTrace();
 			log.info(e.getMessage());
 		}
 	}
-	
+
 	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaD, boolean selected,
 			String name) {
-		
-		try{
+
+		try {
 			orquestador.crearModelo(gen, imgXG, tasaA, tasaD, selected, name);
-			}
-			catch(Exception e){
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, e.getMessage());
-			}
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+
 	}
-	
-	public List<Modelo> getListaModelos(){
+
+	public void setParametros(Modelo model, int epoch, int imgPerEpoch, double learningRate, double momentumRate,
+			double decayRate, boolean nesterov) {
+		orquestador.setParametrosModelo(model, epoch, imgPerEpoch, learningRate, momentumRate, decayRate, nesterov);
+	}
+
+	public List<Modelo> getListaModelos() {
 		return orquestador.getListaModelos();
 	}
 
-	public void cargarNuevasImagenes(String path) {
-		orquestador.cargarNuevasImagenes(path);
-	}
-	
-	public void modeloSeleccionado(Modelo modelo){
-		try{
-		panelConfiguracion.mostrarHiperparametros(modelo);
+	public void cargarImagenesEntrenamiento(String path) {
+		try {
+			orquestador.cargarNuevasImagenes(path);
+		} catch (Exception e) {
+			log.info(e.getMessage());
 		}
-		catch(FileNotFoundException e){
+	}
+
+	public void modeloSeleccionado(Modelo modelo) {
+		try {
+			panelConfiguracion.mostrarHiperparametros(modelo);
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
@@ -121,9 +131,9 @@ public class BackendView extends JFrame implements ActionListener {
 
 		}
 	}
-	
-	////////////MAIN
-	
+
+	//////////// MAIN
+
 	public static void main(String[] args) {
 		BackendView bV = new BackendView();
 		bV.setVisible(true);

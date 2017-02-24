@@ -1,1 +1,8 @@
-{"generaciones":10,"imagenesPorGeneracion":200,"tasaAprendizaje":0.001,"tasaDecadencia":1.0E-4,"nesterov":false,"nombre":"q"}
+{
+	"generaciones":10, ##[0]
+	"imagenesPorGeneracion":200, ##[1]
+	"tasaAprendizaje":0.001,  ##[2]
+	"tasaDecadencia":1.0E-4,  ##[3]
+	"nesterov":false,  ##[4]
+	"nombre":"q"  ##[5]
+}

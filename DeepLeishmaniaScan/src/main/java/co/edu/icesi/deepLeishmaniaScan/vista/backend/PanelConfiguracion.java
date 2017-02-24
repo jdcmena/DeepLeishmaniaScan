@@ -109,7 +109,7 @@ public class PanelConfiguracion extends JPanel {
 		int returnVal = jfc.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION){
 			String selected = jfc.getSelectedFile().getAbsolutePath();
-			principal.cargarNuevasImagenes(selected);
+			principal.cargarImagenesEntrenamiento(selected);
 		}
 		
 	}

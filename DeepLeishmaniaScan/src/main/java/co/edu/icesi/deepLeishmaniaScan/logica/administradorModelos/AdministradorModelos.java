@@ -151,13 +151,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 *            name
 	 */
 	@Override
-	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name)
+	public void crearModelo(int geneneraciones, int imagenPorGeneracion, double tasaAprendizaje, double tasaDecadencia, boolean nesterov, String nombre)
 			throws Exception {
-		Modelo modelo = new Modelo(name);
+		Modelo modelo = new Modelo(nombre);
 		if (!modelExist(Integer.toString(modelo.getID()))) {
 			createModelFolder(Integer.toString(modelo.getID()));
 		}
-		guardarModelo(modelo, gen, imgXG, tasaA, tasaD, selected);
+		guardarModelo(modelo, geneneraciones, imagenPorGeneracion, tasaAprendizaje, tasaDecadencia, nesterov);
 
 	}
 
