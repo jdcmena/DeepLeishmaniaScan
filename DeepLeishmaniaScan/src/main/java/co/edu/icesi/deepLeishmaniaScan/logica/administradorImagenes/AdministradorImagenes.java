@@ -2,9 +2,7 @@ package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 
 import java.io.File;
 import java.util.Iterator;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

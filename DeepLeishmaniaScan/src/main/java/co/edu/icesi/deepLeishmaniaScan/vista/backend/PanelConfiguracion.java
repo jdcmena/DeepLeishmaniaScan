@@ -2,27 +2,19 @@ package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.NumberFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 
 public class PanelConfiguracion extends JPanel {
@@ -88,7 +80,7 @@ public class PanelConfiguracion extends JPanel {
 
 	}
 	
-	public void mostrarHiperparametros(Modelo modelo) throws FileNotFoundException{
+	public void mostrarHiperparametros(Modelo modelo) throws FileNotFoundException{ //TODO
 		JsonParser parser = new JsonParser();
 		JsonObject obj = (JsonObject) parser.parse(new FileReader(modelo.getRunConfigPath()));
 		/*

@@ -86,9 +86,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 	
 	@Override
-	public void nuevaClasificacion(String imgPath, boolean positivo) {
-		// TODO Auto-generated method stub
-		
+	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception{
+		administradorImagenes.nuevaClasificacion(imgPath, positivo);
 	}
 	
 	@Override
