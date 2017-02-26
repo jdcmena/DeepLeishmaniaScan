@@ -29,10 +29,10 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 	private JButton btnCrearModelo;
 
-	private BackendView principal;
+	private Backend principal;
 	private PanelModelos panelModelos;
 
-	public DialogCreateModel(BackendView ventana, PanelModelos panelModelos) {
+	public DialogCreateModel(Backend ventana, PanelModelos panelModelos) {
 		this.panelModelos = panelModelos;
 		principal = ventana;
 		setTitle("Crear nuevo modelo");
@@ -60,7 +60,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 		txtImgXGeneracion = new JTextField();
 		txtImgXGeneracion.setToolTipText(
-				"N\u00FAmero de im\u00E1genes que se tomar\u00E1n como entrenamiento por cada generaci\u00F3n. Tenga en cuenta que entre m\u00E1s im\u00E1genes, mas tiempo tomar\u00E1 el proceso.\r\n");
+				"Numero de im\u00E1genes que se tomar\u00E1n como entrenamiento por cada generaci\u00F3n. Tenga en cuenta que entre m\u00E1s im\u00E1genes, mas tiempo tomar\u00E1 el proceso.\r\n");
 		panel.add(txtImgXGeneracion);
 
 		JLabel lblNewLabel_2 = new JLabel("Tasa de aprendizaje(*)");
@@ -104,7 +104,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		if (gen <= 0) {
 			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacio");
 		}
-		else if (name.equals("")) {
+		else if (name.trim().equals("")) {
 			JOptionPane.showMessageDialog(this, "Elija un nombre para el modelo");
 		}
 		else if (imgXG<100) {

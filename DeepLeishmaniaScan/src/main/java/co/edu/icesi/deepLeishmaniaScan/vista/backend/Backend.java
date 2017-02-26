@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 
-public class BackendView extends JFrame implements ActionListener {
+public class Backend extends JFrame implements ActionListener {
 
-	private static final Logger log = LoggerFactory.getLogger(BackendView.class);
+	private static final Logger log = LoggerFactory.getLogger(Backend.class);
 
 	/**
 	 * 
@@ -42,27 +42,29 @@ public class BackendView extends JFrame implements ActionListener {
 	 * para cargar nuevas imagenes
 	 */
 
-	public BackendView() {
+	public Backend(boolean isFrontend) {
 
-		setTitle("Ventana de configuracion de sistema");
-		menuBar = new JMenuBar();
-		menu = new JMenu("Archivo");
-		menuItem = new JMenuItem("Cargar Imagenes nuevas");
-		menuItem.setActionCommand("CARGAR_IMAGENES");
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuBar.add(menu);
-		this.setJMenuBar(menuBar);
-		getContentPane().setLayout(new BorderLayout());
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		try {
 			orquestador = new Orquestador();
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}
-		initPnlConfig();
-		pack();
-
+		if (!isFrontend) {
+			setTitle("Ventana de configuracion de sistema");
+			menuBar = new JMenuBar();
+			menu = new JMenu("Archivo");
+			menuItem = new JMenuItem("Cargar Imagenes nuevas");
+			menuItem.setActionCommand("CARGAR_IMAGENES");
+			menuItem.addActionListener(this);
+			menu.add(menuItem);
+			menuBar.add(menu);
+			this.setJMenuBar(menuBar);
+			getContentPane().setLayout(new BorderLayout());
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+			initPnlConfig();
+			pack();
+		}
+		panelConfiguracion = new PanelConfiguracion(this);
 	}
 
 	private void initPnlConfig() {
@@ -131,24 +133,23 @@ public class BackendView extends JFrame implements ActionListener {
 
 		}
 	}
-	
-	
-	private void showFileChooser() throws IOException{
+
+	private void showFileChooser() throws IOException {
 		JFileChooser jfc = new JFileChooser();
 		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		jfc.setDialogTitle("Seleccione la carpeta que contenga las imagenes nuevas");
 		int returnVal = jfc.showOpenDialog(this);
-		if(returnVal == JFileChooser.APPROVE_OPTION){
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			String selected = jfc.getSelectedFile().getAbsolutePath();
 			this.cargarImagenesEntrenamiento(selected);
 		}
-		
+
 	}
 
 	//////////// MAIN
 
 	public static void main(String[] args) {
-		BackendView bV = new BackendView();
+		Backend bV = new Backend(false);
 		bV.setVisible(true);
 	}
 

@@ -5,20 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class API implements IAPI{
+public class API implements IAPI {
 
-	public static final String CLASIFY_SCRIPT="";
-	public static final String TRAIN_SCRIPT="";
-	
-	private static String test_com = "cd ~/DeepLeishmaniaScan/";
-	
-	public API(){
-		
+	public static final String CLASIFY_SCRIPT = "";
+	public static final String TRAIN_SCRIPT = "";
+
+	public API() {
+
 	}
-	
+
 	@Override
-	public double[] entrenar(String modelo) {
-		// TODO Auto-generated method stub
+	public double[] entrenar(String modelo) throws Exception {
+		runCommand(TRAIN_SCRIPT);
 		return null;
 	}
 
@@ -29,42 +27,36 @@ public class API implements IAPI{
 	}
 
 	@Override
-	public void runCommand(String command) throws Exception{
-		Process p;
-		try{
-		p = Runtime.getRuntime().exec(test_com);
-		}
-		catch(IOException io){
-			p = Runtime.getRuntime().exec("cd ~");
-			p.waitFor();
-			p = Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan");
-			p.waitFor();
-			p = Runtime.getRuntime().exec(test_com);
-			p.waitFor();
-		}
-		  final InputStream stream = p.getInputStream();
-		  new Thread(new Runnable() {
-		    public void run() {
-		      BufferedReader reader = null;
-		      try {
-		        reader = new BufferedReader(new InputStreamReader(stream));
-		        String line = null;
-		        while ((line = reader.readLine()) != null) {
-		          System.out.println(line);
-		        }
-		      } catch (Exception e) {
-		        // TODO
-		      } finally {
-		        if (reader != null) {
-		          try {
-		            reader.close();
-		          } catch (IOException e) {
-		            // ignore
-		          }
-		        }
-		      }
-		    }
-		  }).start();
+	public void runCommand(String command) throws Exception {
+		String[] relevantOutput = new String[2];
+
+		Process p = Runtime.getRuntime().exec(command);
+
+		final InputStream stream = p.getInputStream();
+		new Thread(new Runnable() {
+			public void run() {
+				BufferedReader reader = null;
+
+				reader = new BufferedReader(new InputStreamReader(stream));
+				String line = null;
+				try {
+					while ((line = reader.readLine()) != null) {
+						System.out.println(line);
+					}
+				} catch (IOException io) {
+					try {
+						throw new Exception(io.getMessage());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (reader != null) {
+
+				}
+			}
+
+		}).start();
 	}
-	
+
 }

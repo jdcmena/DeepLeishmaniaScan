@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
+import co.edu.icesi.deepLeishmaniaScan.vista.frontend.Frontend;
 
 public class PanelModelos extends JPanel implements ActionListener {
 
@@ -24,8 +25,8 @@ public class PanelModelos extends JPanel implements ActionListener {
 	 */
 	private static final long serialVersionUID = 2400780611744407951L;
 
-	private BackendView principal;
-
+	private Backend principalB;
+	
 	private JList<Modelo> listaModelos;
 
 	private Modelo modeloSeleccionado;
@@ -36,8 +37,8 @@ public class PanelModelos extends JPanel implements ActionListener {
 
 	private DefaultListModel<Modelo> dlm;
 	
-	public PanelModelos(BackendView ventana) {
-		principal = ventana;
+	public PanelModelos(Backend ventana) {
+		principalB = ventana;
 		setLayout(new BorderLayout());
 		fillDLF();
 		listaModelos = new JList<>(dlm);
@@ -50,7 +51,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 				JList<Modelo> source = (JList<Modelo>) e.getSource();
 				modeloSeleccionado = (Modelo) source.getSelectedValue();
 				habilitarEntrenar();
-				principal.modeloSeleccionado(modeloSeleccionado);
+				principalB.modeloSeleccionado(modeloSeleccionado);
 			}
 		});
 		this.add(listaModelos, BorderLayout.CENTER);
@@ -98,12 +99,12 @@ public class PanelModelos extends JPanel implements ActionListener {
 		String com = e.getActionCommand();
 		switch (com) {
 		case "NM":
-			DialogCreateModel dlg = new DialogCreateModel(principal, this);
+			DialogCreateModel dlg = new DialogCreateModel(principalB, this);
 			dlg.setVisible(true);
 			break;
 
 		case "EM":
-			principal.entrenar();
+			principalB.entrenar();
 			break;
 
 		}
@@ -119,7 +120,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 
 	public void fillDLF() {
 		dlm = new DefaultListModel<>();
-		for (Modelo modelo : principal.getListaModelos()) {
+		for (Modelo modelo : principalB.getListaModelos()) {
 			dlm.addElement(modelo);
 		}
 		this.repaint();

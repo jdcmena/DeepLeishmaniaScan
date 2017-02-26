@@ -25,7 +25,7 @@ public class PanelConfiguracion extends JPanel {
 	 */
 	private static final long serialVersionUID = -6938563747928859229L;
 
-	private BackendView principal;
+	private Backend principal;
 	/**
 	 * 0: LR 1: DRL 2: MR 3: epoch num 4: imgxepoch
 	 */
@@ -33,7 +33,7 @@ public class PanelConfiguracion extends JPanel {
 	private JCheckBox chkNesterov;
 	private JButton btnGuardar;
 
-	public PanelConfiguracion(BackendView ventana) {
+	public PanelConfiguracion(Backend ventana) {
 		
 		NumberFormat nf = NumberFormat.getPercentInstance();
 		nf.setMaximumFractionDigits(5);
