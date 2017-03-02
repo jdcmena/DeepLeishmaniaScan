@@ -25,6 +25,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 	private JTextField txtTasaDeAprendizaje;
 	private JTextField txtDecadencia;
 	private JTextField txtNombre;
+	private JTextField txtMomentum;
 	JRadioButton rbtnNesterov;
 
 	private JButton btnCrearModelo;
@@ -60,7 +61,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 		txtImgXGeneracion = new JTextField();
 		txtImgXGeneracion.setToolTipText(
-				"Numero de im\u00E1genes que se tomar\u00E1n como entrenamiento por cada generaci\u00F3n. Tenga en cuenta que entre m\u00E1s im\u00E1genes, mas tiempo tomar\u00E1 el proceso.\r\n");
+				"Numero de imagenes que se tomaran como entrenamiento por cada generacion. Tenga en cuenta que entre mas imagenes, mas tiempo tomara el proceso.\r\n");
 		panel.add(txtImgXGeneracion);
 
 		JLabel lblNewLabel_2 = new JLabel("Tasa de aprendizaje(*)");
@@ -74,6 +75,11 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 		txtDecadencia = new JTextField();
 		panel.add(txtDecadencia);
+		
+		JLabel lblNewLabel_41 = new JLabel("Momentum");
+		panel.add(lblNewLabel_41);
+		txtMomentum = new JTextField();
+		panel.add(txtMomentum);
 
 		rbtnNesterov = new JRadioButton("Tecnica de Nesterov");
 		rbtnNesterov.setToolTipText("T\u00E9cnica para acelerar el proceso de optimizaci\u00F3n del entrenamiento. ");
@@ -101,6 +107,7 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		int imgXG = Integer.parseInt(txtImgXGeneracion.getText().trim());
 		double tasaA = Double.parseDouble(txtTasaDeAprendizaje.getText().trim());
 		double tasaD = Double.parseDouble(txtDecadencia.getText().trim());
+		double tasaM = Double.parseDouble(txtMomentum.getText().trim());
 		if (gen <= 0) {
 			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacio");
 		}
@@ -117,9 +124,12 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		else if (tasaD >= tasaA) {
 			JOptionPane.showMessageDialog(this, "Defina una tasa de decadencia menor que la tasa de aprendizaje");
 		}
-		else{
+		else if(tasaM < 0 ){
 			
-		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaD, rbtnNesterov.isSelected(), name);
+		}
+		else{
+		
+		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaM,tasaD, rbtnNesterov.isSelected(), name);
 		panelModelos.fillDLF();
 		this.dispose();
 		}

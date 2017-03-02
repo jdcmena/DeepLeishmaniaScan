@@ -83,7 +83,7 @@ public class Backend extends JFrame implements ActionListener {
 		}
 	}
 
-	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaD, boolean selected,
+	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaM, double tasaD, boolean selected,
 			String name) {
 
 		try {
@@ -144,6 +144,10 @@ public class Backend extends JFrame implements ActionListener {
 			this.cargarImagenesEntrenamiento(selected);
 		}
 
+	}
+	
+	public Orquestador getOrquestadorInstance(){
+		return orquestador;
 	}
 
 	//////////// MAIN

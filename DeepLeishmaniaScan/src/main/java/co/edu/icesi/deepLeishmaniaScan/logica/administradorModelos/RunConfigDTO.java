@@ -19,6 +19,10 @@ public class RunConfigDTO {
 	 */
 	private double tasaAprendizaje;
 	/**
+	 * momentum
+	 */
+	private double momentum;
+	/**
 	 * tasa de decadencia de la tasa de aprendizaje
 	 */
 	private double tasaDecadencia;
@@ -81,6 +85,14 @@ public class RunConfigDTO {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public double getMomentum() {
+		return momentum;
+	}
+
+	public void setMomentum(double momentum) {
+		this.momentum = momentum;
 	}
 	
 	
