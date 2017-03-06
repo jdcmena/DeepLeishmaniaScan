@@ -95,9 +95,9 @@ public class Backend extends JFrame implements ActionListener {
 
 	}
 
-	public void setParametros(Modelo model, int epoch, int imgPerEpoch, double learningRate, double momentumRate,
-			double decayRate, boolean nesterov) {
-		orquestador.setParametrosModelo(model, epoch, imgPerEpoch, learningRate, momentumRate, decayRate, nesterov);
+	public void setParametros(Modelo model, int epoch, int imgPerEpoch, double learningRate, double momentumRate
+			, boolean nesterov) {
+		orquestador.setParametrosModelo(model, epoch, imgPerEpoch, learningRate, momentumRate, nesterov);
 	}
 
 	public List<Modelo> getListaModelos() {

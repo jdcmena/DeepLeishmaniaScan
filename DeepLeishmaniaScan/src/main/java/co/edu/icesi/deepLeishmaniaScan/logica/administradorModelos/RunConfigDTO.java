@@ -23,10 +23,6 @@ public class RunConfigDTO {
 	 */
 	private double momentum;
 	/**
-	 * tasa de decadencia de la tasa de aprendizaje
-	 */
-	private double tasaDecadencia;
-	/**
 	 * tecnica de optimizacion nesterov
 	 */
 	private boolean nesterov;
@@ -61,14 +57,6 @@ public class RunConfigDTO {
 
 	public void setTasaAprendizaje(double tasaAprendizaje) {
 		this.tasaAprendizaje = tasaAprendizaje;
-	}
-
-	public double getTasaDecadencia() {
-		return tasaDecadencia;
-	}
-
-	public void setTasaDecadencia(double tasaDecadencia) {
-		this.tasaDecadencia = tasaDecadencia;
 	}
 
 	public boolean isNesterov() {

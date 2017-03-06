@@ -28,7 +28,7 @@ public interface IAdministradorModelos {
 	 * @param dLr
 	 * @param nesterov
 	 */
-	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr, boolean nesterov);
+	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, boolean nesterov);
 	
 	/**
 	 * devuelve la lista de modelos cargados en memoria
@@ -36,7 +36,7 @@ public interface IAdministradorModelos {
 	 */
 	public List<Modelo> getListaModelos();
 	
-	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean selected) throws Exception;
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA,double momentum, boolean selected) throws Exception;
 	/**
 	 * 
 	 * @param gen numero de generaciones
@@ -47,6 +47,6 @@ public interface IAdministradorModelos {
 	 * @param name nombre de modelo
 	 * @throws Exception
 	 */
-	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name) throws Exception;
+	public void crearModelo(int gen, int imgXG, double tasaA, double momentum, boolean selected, String name) throws Exception;
 	
 }

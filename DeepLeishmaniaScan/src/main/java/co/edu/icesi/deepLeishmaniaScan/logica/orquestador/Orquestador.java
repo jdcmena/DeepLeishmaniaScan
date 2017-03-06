@@ -50,9 +50,9 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr,
+	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR,
 			boolean nesterov) {
-		administradorModelos.setParametrosModelo(model, nEpoch, nImgPerEpoch, lR, mR, dLr, nesterov);
+		administradorModelos.setParametrosModelo(model, nEpoch, nImgPerEpoch, lR, mR, nesterov);
 	}
 
 	@Override

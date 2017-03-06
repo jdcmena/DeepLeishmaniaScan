@@ -49,7 +49,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 * Cuando se va a guardar un modelo NUEVO
 	 */
 	@Override
-	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean nesterov) {
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double momentum, boolean nesterov) {
 
 		PrintWriter out = null;
 		FileWriter fw1 = null;
@@ -77,12 +77,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 
 			String j1 = gson.toJson(model);
 			RunConfigDTO dto = new RunConfigDTO();
+			dto.setNombre(model.getNombre());
 			dto.setGeneraciones(gen);
 			dto.setImagenesPorGeneracion(imgXG);
 			dto.setTasaAprendizaje(tasaA);
-			dto.setTasaDecadencia(tasaD);
+			dto.setMomentum(momentum);
 			dto.setNesterov(nesterov);
-			dto.setNombre(model.getNombre());
+			
 
 			String j2 = gson.toJson(dto);
 			fw1.write(j1);
@@ -120,22 +121,6 @@ public class AdministradorModelos implements IAdministradorModelos {
 		return gson.fromJson(new FileReader(MODELS_DIRECTORY + id + OS + id + ".json"), Modelo.class);
 	}
 
-	/**
-	 * 
-	 * @param model
-	 * @param nEpoch
-	 * @param nImgPerEpoch
-	 * @param lR
-	 * @param mR
-	 * @param dLr
-	 * @param nesterov
-	 */
-	@Override
-	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR, double dLr,
-			boolean nesterov) {
-		// TODO - implement AdministradorModelos.setParametrosModelo
-		throw new UnsupportedOperationException();
-	}
 
 	@Override
 	public List<Modelo> getListaModelos() {
@@ -151,13 +136,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 	 *            name
 	 */
 	@Override
-	public void crearModelo(int geneneraciones, int imagenPorGeneracion, double tasaAprendizaje, double tasaDecadencia, boolean nesterov, String nombre)
+	public void crearModelo(int geneneraciones, int imagenPorGeneracion, double tasaAprendizaje, double momentum, boolean nesterov, String nombre)
 			throws Exception {
 		Modelo modelo = new Modelo(nombre);
 		if (!modelExist(Integer.toString(modelo.getID()))) {
 			createModelFolder(Integer.toString(modelo.getID()));
 		}
-		guardarModelo(modelo, geneneraciones, imagenPorGeneracion, tasaAprendizaje, tasaDecadencia, nesterov);
+		guardarModelo(modelo, geneneraciones, imagenPorGeneracion, tasaAprendizaje, momentum , nesterov);
 
 	}
 
@@ -230,6 +215,13 @@ public class AdministradorModelos implements IAdministradorModelos {
 			mainFolder.mkdir();
 			mainFolder.createNewFile();
 		}
+	}
+
+	@Override
+	public void setParametrosModelo(Modelo model, int nEpoch, int nImgPerEpoch, double lR, double mR,
+			boolean nesterov) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
