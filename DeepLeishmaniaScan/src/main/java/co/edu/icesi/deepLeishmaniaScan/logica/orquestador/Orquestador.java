@@ -2,6 +2,9 @@ package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 
 import java.io.IOException;
 import java.util.List;
+
+import co.edu.icesi.deepLeishmaniaScan.framework.API;
+import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.IAdministradorImagenes;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.AdministradorModelos;
@@ -61,8 +64,8 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public void crearModelo(int gen, int imgXG, double tasaA, double tasaD, boolean selected, String name) throws Exception{
-		administradorModelos.crearModelo(gen, imgXG, tasaA,tasaD,selected,name);
+	public void crearModelo(int gen, int imgXG, double tasaA, double tasaM, boolean selected, String name) throws Exception{
+		administradorModelos.crearModelo(gen, imgXG, tasaA,tasaM,selected,name);
 	}
 
 	@Override
@@ -99,10 +102,11 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	////////////////////////////////////////
 	
 	private void init() throws Exception{
+		IAPI API = new API();
 		administradorModelos = new AdministradorModelos();
 		administradorImagenes = new AdministradorImagenes();
-		clasificacion = new Clasificacion();
-		entrenamiento = new Entrenamiento();
+		clasificacion = new Clasificacion(API);
+		entrenamiento = new Entrenamiento(API);
 	}
 
 

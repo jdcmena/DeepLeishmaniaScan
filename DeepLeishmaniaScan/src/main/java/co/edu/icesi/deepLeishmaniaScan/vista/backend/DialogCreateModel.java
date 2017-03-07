@@ -23,7 +23,6 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 	private JTextField txtGeneraciones;
 	private JTextField txtImgXGeneracion;
 	private JTextField txtTasaDeAprendizaje;
-	private JTextField txtDecadencia;
 	private JTextField txtNombre;
 	private JTextField txtMomentum;
 	JRadioButton rbtnNesterov;
@@ -69,12 +68,6 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 
 		txtTasaDeAprendizaje = new JTextField();
 		panel.add(txtTasaDeAprendizaje);
-
-		JLabel lblNewLabel_3 = new JLabel("tasa de decadencia(*)");
-		panel.add(lblNewLabel_3);
-
-		txtDecadencia = new JTextField();
-		panel.add(txtDecadencia);
 		
 		JLabel lblNewLabel_41 = new JLabel("Momentum");
 		panel.add(lblNewLabel_41);
@@ -106,7 +99,6 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 		String name = txtNombre.getText();
 		int imgXG = Integer.parseInt(txtImgXGeneracion.getText().trim());
 		double tasaA = Double.parseDouble(txtTasaDeAprendizaje.getText().trim());
-		double tasaD = Double.parseDouble(txtDecadencia.getText().trim());
 		double tasaM = Double.parseDouble(txtMomentum.getText().trim());
 		if (gen <= 0) {
 			JOptionPane.showMessageDialog(this, "El numero de generaciones no puede ser cero o estar vacio");
@@ -121,15 +113,12 @@ public class DialogCreateModel extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Defina una tasa de aprendizaje entre 0 y 10");
 
 		}
-		else if (tasaD >= tasaA) {
-			JOptionPane.showMessageDialog(this, "Defina una tasa de decadencia menor que la tasa de aprendizaje");
-		}
 		else if(tasaM < 0 ){
 			
 		}
 		else{
 		
-		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaM,tasaD, rbtnNesterov.isSelected(), name);
+		principal.crearModelo(txtNombre.getText(), gen,imgXG,tasaA,tasaM, rbtnNesterov.isSelected(), name);
 		panelModelos.fillDLF();
 		this.dispose();
 		}

@@ -83,11 +83,11 @@ public class Backend extends JFrame implements ActionListener {
 		}
 	}
 
-	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaM, double tasaD, boolean selected,
+	public void crearModelo(String text, int gen, int imgXG, double tasaA, double tasaM, boolean selected,
 			String name) {
 
 		try {
-			orquestador.crearModelo(gen, imgXG, tasaA, tasaD, selected, name);
+			orquestador.crearModelo(gen, imgXG, tasaA, tasaM, selected, name);
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, e.getMessage());

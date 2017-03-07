@@ -89,7 +89,7 @@ public class PanelConfiguracion extends JPanel {
 		reader.setLenient(true);
 		JsonObject obj = gson.fromJson(reader, JsonObject.class);
 		*/
-		log.info(obj.get("nombre").toString());		
+		//log.info(obj.get("nombre").toString());		
 	}
 
 }

@@ -77,7 +77,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 
 			String j1 = gson.toJson(model);
 			RunConfigDTO dto = new RunConfigDTO();
-			dto.setNombre(model.getNombre());
+			dto.setId(model.getID());
 			dto.setGeneraciones(gen);
 			dto.setImagenesPorGeneracion(imgXG);
 			dto.setTasaAprendizaje(tasaA);
@@ -90,7 +90,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 			fw2.write(j2);
 
 			out = new PrintWriter(new FileWriter(MODELS_LIST, true));
-			out.append(Integer.toString(model.getID()));
+			out.append(Integer.toString(model.getID())+"\n");
 
 		} catch (Exception e) {
 

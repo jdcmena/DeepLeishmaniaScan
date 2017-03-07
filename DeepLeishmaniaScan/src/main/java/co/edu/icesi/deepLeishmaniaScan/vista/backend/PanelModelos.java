@@ -52,6 +52,8 @@ public class PanelModelos extends JPanel implements ActionListener {
 				modeloSeleccionado = (Modelo) source.getSelectedValue();
 				habilitarEntrenar();
 				principalB.modeloSeleccionado(modeloSeleccionado);
+				listaModelos.repaint();
+				listaModelos.updateUI();
 			}
 		});
 		this.add(listaModelos, BorderLayout.CENTER);
@@ -119,7 +121,9 @@ public class PanelModelos extends JPanel implements ActionListener {
 	}
 
 	public void fillDLF() {
+		if(dlm == null){
 		dlm = new DefaultListModel<>();
+		}
 		for (Modelo modelo : principalB.getListaModelos()) {
 			dlm.addElement(modelo);
 		}

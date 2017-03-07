@@ -29,7 +29,7 @@ public class RunConfigDTO {
 	/**
 	 * nombre del modelo
 	 */
-	private String nombre;
+	private int id;
 	
 	public RunConfigDTO(){
 		
@@ -67,12 +67,12 @@ public class RunConfigDTO {
 		this.nesterov = nesterov;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public int getId() {
+		return id;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public double getMomentum() {
