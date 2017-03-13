@@ -16,37 +16,36 @@ public class API implements IAPI {
 
 	public static final String CLASIFY_SCRIPT = "";
 	public static final String TRAIN_SCRIPT = "";
-	
+/*
 	private StringWriter writer;
 	private ScriptEngineManager manager;
 	private ScriptContext context;
 	private ScriptEngine engine;
-
+*/
 	public API() {
-		writer = new StringWriter(); //ouput will be stored here
-	    manager = new ScriptEngineManager();
-	    context = new SimpleScriptContext();
-	    context.setWriter(writer); //configures output redirection
-	    engine = manager.getEngineByName("python");
+		/*
+		writer = new StringWriter(); // ouput will be stored here
+		manager = new ScriptEngineManager();
+		context = new SimpleScriptContext();
+		context.setWriter(writer); // configures output redirection
+		engine = manager.getEngineByName("python");
+		*/
 	}
 
 	@Override
 	public double[] entrenar(String modelo) throws Exception {
-		runCommand(TRAIN_SCRIPT);
-		return null;
+		return runCommand(TRAIN_SCRIPT, 1);
 	}
 
 	@Override
-	public double clasificar(String modelo) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double clasificar(String modelo) throws Exception{
+		return runCommand(CLASIFY_SCRIPT, 2)[0];
 	}
 
-	@Override
-	public String runCommand(String command) throws Exception {
-		
-		String[] relevantOutput = new String[2];
-		/*
+	private double[] runCommand(String command, int flag) throws Exception {
+
+		double[] relevantOutput = new double[2];
+
 		Process p = Runtime.getRuntime().exec(command);
 
 		final InputStream stream = p.getInputStream();
@@ -58,6 +57,23 @@ public class API implements IAPI {
 				String line = null;
 				try {
 					while ((line = reader.readLine()) != null) {
+						switch (flag) {
+
+						case 1:
+							if (line.contains("precision")) {
+								String temp = line.split(" ")[1];
+								relevantOutput[0] = Double.parseDouble(temp.substring(0, temp.length() - 2));
+							}
+							break;
+
+						case 2:
+							//TODO
+							break;
+
+						default:
+							break;
+
+						}
 						System.out.println(line);
 					}
 				} catch (IOException io) {
@@ -74,51 +90,30 @@ public class API implements IAPI {
 			}
 
 		}).start();
-		*/
+
 		return null;
 	}
-	
+
 	private void scriptRunner(String command) throws Exception {
-//////////////
-    engine.eval(new FileReader("/home/jdcm/hello.py"), context);
-    System.out.println(writer.toString()); 
-	//////////////Single line script
-	/*
-	Process p;
-	try {
-		p = Runtime.getRuntime().exec("python hello.py");
-	} catch (IOException io) {
-		p = Runtime.getRuntime().exec("cd ~");
-		p.waitFor();
-		p = Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan");
-		p.waitFor();
-		p = Runtime.getRuntime().exec("python hello.py");
-		p.waitFor();
+		//////////////
+		engine.eval(new FileReader("/home/jdcm/hello.py"), context);
+		System.out.println(writer.toString());
+		////////////// Single line script
+		/*
+		 * Process p; try { p = Runtime.getRuntime().exec("python hello.py"); }
+		 * catch (IOException io) { p = Runtime.getRuntime().exec("cd ~");
+		 * p.waitFor(); p =
+		 * Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan"); p.waitFor(); p
+		 * = Runtime.getRuntime().exec("python hello.py"); p.waitFor(); } final
+		 * InputStream stream = p.getInputStream(); new Thread(new Runnable() {
+		 * public void run() { BufferedReader reader = null; try { reader = new
+		 * BufferedReader(new InputStreamReader(stream)); String line = null;
+		 * while ((line = reader.readLine()) != null) {
+		 * System.out.println(line); } } catch (Exception e) {
+		 * 
+		 * } finally { if (reader != null) { try { reader.close(); } catch
+		 * (IOException e) { // ignore } } } } }).start();
+		 */
 	}
-	final InputStream stream = p.getInputStream();
-	new Thread(new Runnable() {
-		public void run() {
-			BufferedReader reader = null;
-			try {
-				reader = new BufferedReader(new InputStreamReader(stream));
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					System.out.println(line);
-				}
-			} catch (Exception e) {
-				
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			}
-		}
-	}).start();
-*/
-}
 
 }

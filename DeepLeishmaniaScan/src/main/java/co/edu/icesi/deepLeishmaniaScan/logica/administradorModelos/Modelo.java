@@ -8,7 +8,7 @@ public class Modelo {
 	private String arquitectura;
 	private String runConfig;
 	private String direccionDirectorio;
-	private String metricas;
+	private String[] metricas;
 
 	/**
 	 * Constructor con ruta de archivo de configuracion
@@ -22,6 +22,7 @@ public class Modelo {
 		this.direccionDirectorio = direccionDirectorio;
 		this.nombre = nombre;
 		this.runConfig = runConfig;
+		metricas = new String[3];
 	}
 
 	/**
@@ -65,12 +66,23 @@ public class Modelo {
 	}
 
 	public String[] getMetricas() {
-		// TODO - implement Modelo.getMetricas
-		throw new UnsupportedOperationException();
+		return metricas;
 	}
 
 	public void setRunConfigRoute(String runConfig) {
 		this.runConfig = runConfig;
+	}
+	
+	public void setAccuracy(double accuracy){
+		this.metricas[0] = accuracy+"%";
+	}
+	
+	public void setSensibility(double sens){
+		this.metricas[1] = sens+"%";
+	}
+	
+	public void setSpecificity(double specificity){
+		this.metricas[2] = specificity+"%";
 	}
 
 	@Override

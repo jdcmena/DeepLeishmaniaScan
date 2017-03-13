@@ -6,5 +6,4 @@ public interface IAPI {
 	
 	public double clasificar(String modelo) throws Exception;
 
-	public String runCommand(String command) throws Exception;
 }

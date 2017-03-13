@@ -109,6 +109,21 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 		entrenamiento = new Entrenamiento(API);
 	}
 
+	@Override
+	public void setMetrics(Modelo model, double accuracy, double sensibility, double specificity) throws Exception {
+		administradorModelos.setMetrics(model, accuracy, sensibility, specificity);
+	}
+
+	@Override
+	public double getSensibility() throws Exception {
+		return administradorImagenes.getSensibility();
+	}
+
+	@Override
+	public double getSpecificity() throws Exception {
+		return administradorImagenes.getSpecificity();
+	}
+
 
 
 	

@@ -89,4 +89,16 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		}
 	}
 
+	@Override
+	public double getSensibility() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getSpecificity() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

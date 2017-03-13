@@ -77,7 +77,10 @@ public class Backend extends JFrame implements ActionListener {
 
 	public void entrenar() {
 		try {
-			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
+			//TODO
+			double [] metricas = orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
+			orquestador.setMetrics(panelModelos.getModeloSeleccionado(), metricas[0], 0, 0);
+			
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}

@@ -32,4 +32,7 @@ public interface IAdministradorImagenes {
 	 */
 	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception;
 	
+	public double getSensibility() throws Exception;
+	
+	public double getSpecificity() throws Exception;
 }
