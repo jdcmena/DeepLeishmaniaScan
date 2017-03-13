@@ -1,53 +1,49 @@
 package co.edu.icesi.deepLeishmaniaScan.framework;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.SimpleScriptContext;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 
 public class API implements IAPI {
 
-	public static final String CLASIFY_SCRIPT = "";
-	public static final String TRAIN_SCRIPT = "";
-/*
-	private StringWriter writer;
-	private ScriptEngineManager manager;
-	private ScriptContext context;
-	private ScriptEngine engine;
-*/
+	private static final char OS = File.separatorChar;
+	public static final String CLASIFY_SCRIPT = "python classify.py ";
+	public static final String TRAIN_SCRIPT = "python train.py ";
+
+	/*
+	 * private StringWriter writer; private ScriptEngineManager manager; private
+	 * ScriptContext context; private ScriptEngine engine;
+	 */
 	public API() {
 		/*
-		writer = new StringWriter(); // ouput will be stored here
-		manager = new ScriptEngineManager();
-		context = new SimpleScriptContext();
-		context.setWriter(writer); // configures output redirection
-		engine = manager.getEngineByName("python");
-		*/
+		 * writer = new StringWriter(); // ouput will be stored here manager =
+		 * new ScriptEngineManager(); context = new SimpleScriptContext();
+		 * context.setWriter(writer); // configures output redirection engine =
+		 * manager.getEngineByName("python");
+		 */
 	}
 
 	@Override
 	public double[] entrenar(String modelo) throws Exception {
-		return runCommand(TRAIN_SCRIPT, 1);
+		return runCommand(TRAIN_SCRIPT + modelo + "runconfig.json", 1);
 	}
 
 	@Override
-	public double clasificar(String modelo) throws Exception{
-		return runCommand(CLASIFY_SCRIPT, 2)[0];
+	public double clasificar(String modelo) throws Exception {
+		return runCommand(CLASIFY_SCRIPT + modelo, 2)[0];
 	}
 
 	private double[] runCommand(String command, int flag) throws Exception {
 
 		double[] relevantOutput = new double[2];
 
-		Process p = Runtime.getRuntime().exec(command);
-
+		Runtime r = Runtime.getRuntime();
+		//ProcessBuilder pb = new ProcessBuilder("python","train.py",command);
+		Process p = r.exec(command);
 		final InputStream stream = p.getInputStream();
 		new Thread(new Runnable() {
 			public void run() {
@@ -57,31 +53,21 @@ public class API implements IAPI {
 				String line = null;
 				try {
 					while ((line = reader.readLine()) != null) {
-						switch (flag) {
-
-						case 1:
+						System.out.println(line);
+						if (flag == 1) {
 							if (line.contains("precision")) {
 								String temp = line.split(" ")[1];
 								relevantOutput[0] = Double.parseDouble(temp.substring(0, temp.length() - 2));
 							}
-							break;
-
-						case 2:
-							//TODO
-							break;
-
-						default:
-							break;
-
 						}
-						System.out.println(line);
+						if (flag == 2) {
+							// TODO
+						}
+
 					}
+					System.out.println(line);
 				} catch (IOException io) {
-					try {
-						throw new Exception(io.getMessage());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					io.printStackTrace();
 				}
 
 				if (reader != null) {
@@ -90,19 +76,21 @@ public class API implements IAPI {
 			}
 
 		}).start();
+		
 
-		return null;
+		while (relevantOutput[0] == 0 || relevantOutput[1] == 0) {
+			Thread.sleep(2000);
+		}
+		return relevantOutput;
 	}
 
 	private void scriptRunner(String command) throws Exception {
-		//////////////
-		engine.eval(new FileReader("/home/jdcm/hello.py"), context);
-		System.out.println(writer.toString());
-		////////////// Single line script
 		/*
-		 * Process p; try { p = Runtime.getRuntime().exec("python hello.py"); }
-		 * catch (IOException io) { p = Runtime.getRuntime().exec("cd ~");
-		 * p.waitFor(); p =
+		 * engine.eval(new FileReader("/home/jdcm/hello.py"), context);
+		 * System.out.println(writer.toString()); ////////////// Single line
+		 * script /* Process p; try { p =
+		 * Runtime.getRuntime().exec("python hello.py"); } catch (IOException
+		 * io) { p = Runtime.getRuntime().exec("cd ~"); p.waitFor(); p =
 		 * Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan"); p.waitFor(); p
 		 * = Runtime.getRuntime().exec("python hello.py"); p.waitFor(); } final
 		 * InputStream stream = p.getInputStream(); new Thread(new Runnable() {

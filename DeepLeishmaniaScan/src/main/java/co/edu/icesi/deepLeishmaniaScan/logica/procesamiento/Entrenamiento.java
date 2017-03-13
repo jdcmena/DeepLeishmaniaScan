@@ -23,11 +23,7 @@ public class Entrenamiento implements IEntrenamiento {
 
 	@Override
 	public double[] entrenar(String path) throws Exception {
-		// TODO Auto-generated method stub
-
-		// scriptRunner("p");
-		log.info("-----");
-		return null;
+		return api.entrenar(path);
 	}
 
 }

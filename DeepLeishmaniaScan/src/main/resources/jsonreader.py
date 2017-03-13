@@ -17,6 +17,6 @@ def readFileHip(file):
         array.append(dfile["imagenesPorGeneracion"]) #2
         array.append(dfile["tasaAprendizaje"]) #3
         array.append(dfile["momentum"]) #4
-        array.append(dfile["nestetov"]) #5
+        array.append(dfile["nesterov"]) #5
         
     return array

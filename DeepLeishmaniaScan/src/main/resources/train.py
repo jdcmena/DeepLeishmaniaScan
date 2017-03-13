@@ -1,5 +1,7 @@
 from __future__ import division # /: float div, //: integer div
 from PIL import Image
+import os
+import argparse
 import h5py
 import numpy as np
 import glob
@@ -21,6 +23,14 @@ from keras.utils.visualize_util import plot
 ## modelIdJson has model's file routes, .h5 and arch.json paths
 ##dataParentDirString has dataset route and validation folders
 
+parser = argparse.ArgumentParser(description='training script')
+parser.add_argument('filepath')
+catchedVars = vars(parser.parse_args())
+
+
+
+
+
 def runModel(runConfigJson):
     
     hiperparameters = jsonreader.readFileHip(runConfigJson) #TODO check array values
@@ -35,10 +45,10 @@ def runModel(runConfigJson):
     batch_size_var = 30
     img_width = 150
     img_height = 150
-    nb_validation_samples = samples_per_epoch_var/4
+    nb_validation_samples = samples_per_epoch_var/5
 
-    train_data_dir='conjuntoDeDatos/train'##'data/train'
-    validation_data_dir='conjuntoDeDatos/validation'##'data/validation'
+    train_data_dir='conjuntoDeDatos'##'data/train'
+    validation_data_dir='conjuntoDeDatos'##'data/validation'
 
     ##prediction_data_dir=dataParentDirString+'/prediction'## data/prediction' #
     
@@ -63,10 +73,10 @@ def runModel(runConfigJson):
     
     loaded_model = Model(input=inceptionModel.input, output=predict)
     
-    for layer in loaded_model.layers[:172]:
+    for layer in loaded_model.layers[:150]:
         layer.trainable = False
         
-    for layer in loaded_model.layers[172:]:
+    for layer in loaded_model.layers[150:]:
         layer.trainable = True
     
     
@@ -74,7 +84,7 @@ def runModel(runConfigJson):
     
     decayRC = lrate/nb_epoch_var
     sgd = SGD(lr=lrate, momentum=momentum_var, decay=decayRC, nesterov=nesterov_var)
-    loaded_model.compile(loss='binary_crossentropy',
+    loaded_model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=['accuracy','mean_absolute_error'])
     
@@ -85,33 +95,42 @@ def runModel(runConfigJson):
             rotation_range=360
     )
     
-    #test_datagen = ImageDataGenerator()
+    test_datagen = ImageDataGenerator()
     
-    eval_generator = train_datagen.flow_from_directory(
+    train_generator = train_datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size_var,
-        class_mode='binary',
+        class_mode='categorical',
+        shuffle=True
+    )
+    
+    validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(img_width, img_height),
+        batch_size=batch_size_var,
+        class_mode='categorical',
         shuffle=True
     )
     
     history = loaded_model.fit_generator(
-        eval_generator,
+        train_generator,
         nb_epoch = nb_epoch_var,
         samples_per_epoch = samples_per_epoch_var,
-        #validation_data = validation_,
+        validation_data = validation_generator,
         nb_val_samples=nb_validation_samples,
         verbose=1,
         ##callbacks=callbacks_list
-        )
+    )
     
-    
+    print(os.path.realpath(__file__))
     print("Saving model...")
     model_json = loaded_model.to_json()
-    with open(modelPath+"/"+modelPath+".json", "w") as json_file:
+
+    with open("models/"+modelPath+"/"+modelPath+".json", "w") as json_file:
         json_file.write(simplejson.dumps(simplejson.loads(model_json), indent=4))
-    
-    loaded_model.save_weights(modelPath+"/"+modelPath+'.h5') # save weights
+    print("Saving weights...")
+    loaded_model.save_weights("models/"+modelPath+"/"+modelPath+'.h5') # save weights
     
     print(modelPath+ " saved successfuly")
     
@@ -149,3 +168,5 @@ def runModel(runConfigJson):
     #print(evR)
     
     print('finished')
+
+runModel(catchedVars['filepath'])

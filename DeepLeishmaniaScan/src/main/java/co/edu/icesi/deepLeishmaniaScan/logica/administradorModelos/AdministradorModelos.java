@@ -21,9 +21,9 @@ public class AdministradorModelos implements IAdministradorModelos {
 	private static final Logger log = LoggerFactory.getLogger(AdministradorModelos.class);
 
 	private static final char OS = File.separatorChar;
-	private static final String MODELS_DIRECTORY = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "models"
+	private static final String MODELS_DIRECTORY = "." + OS + "models"
 			+ OS + "";
-	private static final String MODELS_LIST = "." + OS + "src" + OS + "main" + OS + "resources" + OS + "modelsList.txt";
+	private static final String MODELS_LIST = "." + OS + "modelsList.txt";
 	private static final String JSON_EXT = ".json";
 	
 	private Gson gson;
@@ -62,11 +62,12 @@ public class AdministradorModelos implements IAdministradorModelos {
 
 		String folderPath = MODELS_DIRECTORY + model.getID() + OS;
 		String jsonRunConfigPath = MODELS_DIRECTORY + model.getID() + OS + "runconfig" + JSON_EXT;
-		model.setRutaDirectorioModelo(folderPath);
 		model.setRunConfigRoute(jsonRunConfigPath);
 		File modelJson = new File(folderPath);
 		modelJson.mkdir();
 		modelJson.createNewFile();
+		
+		model.setRutaDirectorioModelo(modelJson.getAbsolutePath());
 
 		modelJson = new File(folderPath + model.getID() + JSON_EXT);
 		modelJson.getParentFile().mkdirs();
@@ -79,6 +80,8 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw1 = new FileWriter(folderPath + model.getID() + JSON_EXT);
 		fw2 = new FileWriter(jsonRunConfigPath);
 
+		model.setRutaDirectorioModelo("models"+OS+model.getID()+OS);
+		
 		String j1 = gson.toJson(model);
 		RunConfigDTO dto = new RunConfigDTO();
 		dto.setId(model.getID());
@@ -106,7 +109,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 	}
 
 	/**
-	 * metodo encargado de asignar las métricas de interés al modelo que se esté
+	 * metodo encargado de asignar las mï¿½tricas de interï¿½s al modelo que se estï¿½
 	 * utilizando
 	 */
 	@Override
