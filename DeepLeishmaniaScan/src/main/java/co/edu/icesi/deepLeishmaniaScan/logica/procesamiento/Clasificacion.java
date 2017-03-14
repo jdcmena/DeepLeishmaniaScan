@@ -11,9 +11,8 @@ public class Clasificacion implements IClasificacion{
 	}
 
 	@Override
-	public double clasificar(String path) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double clasificar(String path) throws Exception{
+		return api.clasificar(path);
 	}
 
 }

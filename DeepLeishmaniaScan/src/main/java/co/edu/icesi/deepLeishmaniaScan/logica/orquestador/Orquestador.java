@@ -38,7 +38,7 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public double clasificar(String path) {
+	public double clasificar(String path) throws Exception{
 		return clasificacion.clasificar(path);
 	}
 
