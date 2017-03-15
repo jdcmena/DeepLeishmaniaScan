@@ -17,7 +17,7 @@ from keras.optimizers import SGD, RMSprop
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.applications.inception_v3 import InceptionV3
-from keras.utils.visualize_util import plot
+#from keras.utils.visualize_util import plot
 
 ##runConfigJson has hyperparameters
 ## modelIdJson has model's file routes, .h5 and arch.json paths
@@ -26,8 +26,6 @@ from keras.utils.visualize_util import plot
 parser = argparse.ArgumentParser(description='training script')
 parser.add_argument('filepath')
 catchedVars = vars(parser.parse_args())
-
-
 
 
 
@@ -43,22 +41,24 @@ def runModel(runConfigJson):
     #decay_lR_var = hiperparameters[4]
     nesterov_var = hiperparameters[5]
     batch_size_var = int(round((samples_per_epoch_var/10),0))
-    img_width = 100
-    img_height = 100
+    img_width = 150
+    img_height = 150
     nb_validation_samples = int(round((batch_size_var/2),0))
 
     train_data_dir='conjuntoDeDatos'##'data/train'
     validation_data_dir='conjuntoDeDatos'##'data/validation'
+    
+    #loaded_model.save_weights("inceptionV3_1.h5")
 
     ##prediction_data_dir=dataParentDirString+'/prediction'## data/prediction' #
     
-    json_file = open('inceptionV3.json', 'r')
+    json_file = open('inceptionV3_1.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     inceptionModel = model_from_json(loaded_model_json)
     
     # load weights into base model
-    inceptionModel.load_weights("inceptionV3.h5")
+    inceptionModel.load_weights("inceptionV3_1.h5")
     
     
     
@@ -73,10 +73,10 @@ def runModel(runConfigJson):
     
     loaded_model = Model(input=inceptionModel.input, output=predict)
     
-    for layer in loaded_model.layers[:130]:
+    for layer in loaded_model.layers[:150]:
         layer.trainable = False
         
-    for layer in loaded_model.layers[130:]:
+    for layer in loaded_model.layers[150:]:
         layer.trainable = True
     
     
@@ -103,15 +103,20 @@ def runModel(runConfigJson):
         target_size=(img_width, img_height),
         batch_size=batch_size_var,
         class_mode='categorical',
-        shuffle=True
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
     )
     
+    class_dictionary = train_generator.class_indices
+    print(class_dictionary)
+
     validation_generator = test_datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_width, img_height),
         batch_size=nb_validation_samples,
         class_mode='categorical',
-        shuffle=True
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
     )
     print("initializing fit...")
 
@@ -124,7 +129,7 @@ def runModel(runConfigJson):
         verbose=1
     )
 
-    print(loaded_model.summary())
+    #print(loaded_model.summary())
 
     eval_generator = train_datagen.flow_from_directory(
     train_data_dir,
@@ -143,7 +148,7 @@ def runModel(runConfigJson):
 
     print(str(modelPath)+" saved successfuly")
 
-    evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=50,max_q_size=10, nb_worker=1, pickle_safe=False)
+    evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=80,max_q_size=10, nb_worker=4, pickle_safe=True)
     print("Accuracy: %.2f%%" % (evaluation[1]*100))
     
     #pred = loaded_model.predict_generator(eval_generator, val_samples=50,max_q_size=10, nb_worker=1, pickle_safe=False)
