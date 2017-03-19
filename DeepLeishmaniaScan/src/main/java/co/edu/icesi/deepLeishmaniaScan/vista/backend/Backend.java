@@ -1,6 +1,8 @@
 package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -13,6 +15,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.TitledBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +45,7 @@ public class Backend extends JFrame implements ActionListener {
 
 	private PanelConfiguracion panelConfiguracion;
 	private PanelModelos panelModelos;
+	private JTextArea consola;
 
 	/**
 	 * para cargar nuevas imagenes
@@ -70,6 +79,23 @@ public class Backend extends JFrame implements ActionListener {
 	private void initPnlConfig() {
 		panelConfiguracion = new PanelConfiguracion(this);
 		panelModelos = new PanelModelos(this);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setLayout(new BorderLayout(0, 0));
+
+		consola = new JTextArea();
+		consola.setEditable(false);
+		consola.setWrapStyleWord(true);
+		consola.setSize(400, 200);
+		panel.add(consola, BorderLayout.CENTER);
+
+		JProgressBar progressBar = new JProgressBar();
+		panel.add(progressBar, BorderLayout.SOUTH);
+
+		JScrollPane jsp = new JScrollPane(consola);
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		getContentPane().add(panel, BorderLayout.SOUTH);
 		getContentPane().add(panelConfiguracion, BorderLayout.CENTER);
 		getContentPane().add(panelModelos, BorderLayout.WEST);
 

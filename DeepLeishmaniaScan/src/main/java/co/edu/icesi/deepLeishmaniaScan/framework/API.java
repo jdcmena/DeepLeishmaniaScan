@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
-
 public class API implements IAPI {
 
 	private static final char OS = File.separatorChar;
@@ -82,26 +80,6 @@ public class API implements IAPI {
 			Thread.sleep(2000);
 		}
 		return relevantOutput;
-	}
-
-	private void scriptRunner(String command) throws Exception {
-		/*
-		 * engine.eval(new FileReader("/home/jdcm/hello.py"), context);
-		 * System.out.println(writer.toString()); ////////////// Single line
-		 * script /* Process p; try { p =
-		 * Runtime.getRuntime().exec("python hello.py"); } catch (IOException
-		 * io) { p = Runtime.getRuntime().exec("cd ~"); p.waitFor(); p =
-		 * Runtime.getRuntime().exec("mkdir DeepLeishmaniaScan"); p.waitFor(); p
-		 * = Runtime.getRuntime().exec("python hello.py"); p.waitFor(); } final
-		 * InputStream stream = p.getInputStream(); new Thread(new Runnable() {
-		 * public void run() { BufferedReader reader = null; try { reader = new
-		 * BufferedReader(new InputStreamReader(stream)); String line = null;
-		 * while ((line = reader.readLine()) != null) {
-		 * System.out.println(line); } } catch (Exception e) {
-		 * 
-		 * } finally { if (reader != null) { try { reader.close(); } catch
-		 * (IOException e) { // ignore } } } } }).start();
-		 */
 	}
 
 }

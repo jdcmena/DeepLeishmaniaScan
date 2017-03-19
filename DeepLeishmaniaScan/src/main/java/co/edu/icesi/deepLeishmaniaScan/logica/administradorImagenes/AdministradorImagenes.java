@@ -5,6 +5,8 @@ import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.imaging.*;
+import org.openimaj.image.colour.*;
 
 public class AdministradorImagenes implements IAdministradorImagenes {
 
@@ -33,6 +35,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 
 	@Override
 	public String getRutaPositivos() {
+		org.apache.commons.imaging.color.ColorConversions.convertRGBtoXYZ(1);
 		return RUTA_POSITIVOS;
 	}
 

@@ -149,7 +149,8 @@ public class Frontend extends JFrame {
 				JOptionPane.showMessageDialog(this, "Debe seleccionar una imagen para clasificar");
 			} else if (selected.isFile()) {
 				try{
-				probability = orquestador.clasificar(selected.getAbsolutePath());
+				String modelPath = panelModelosFrontend.getModeloSeleccionado().getRunConfigPath();
+				probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath);
 				}
 				catch(Exception e){
 					JOptionPane.showMessageDialog(this, e.getMessage());
