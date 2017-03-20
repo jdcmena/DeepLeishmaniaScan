@@ -1,5 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.procesamiento;
 
+import javax.swing.JTextArea;
+
 import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 
 public class Clasificacion implements IClasificacion{
@@ -11,8 +13,8 @@ public class Clasificacion implements IClasificacion{
 	}
 
 	@Override
-	public double clasificar(String path) throws Exception{
-		return api.clasificar(path);
+	public double clasificar(String path, JTextArea consola) throws Exception{
+		return api.clasificar(path, consola);
 	}
 
 }

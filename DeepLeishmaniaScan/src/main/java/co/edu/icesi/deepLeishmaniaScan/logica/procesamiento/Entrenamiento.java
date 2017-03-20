@@ -1,5 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.procesamiento;
 
+import javax.swing.JTextArea;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +24,8 @@ public class Entrenamiento implements IEntrenamiento {
 	}
 
 	@Override
-	public double[] entrenar(String path) throws Exception {
-		return api.entrenar(path);
+	public double[] entrenar(String path, JTextArea consola) throws Exception {
+		return api.entrenar(path, consola);
 	}
 
 }

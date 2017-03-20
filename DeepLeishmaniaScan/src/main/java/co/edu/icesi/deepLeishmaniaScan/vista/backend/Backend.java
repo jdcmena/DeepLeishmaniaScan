@@ -89,7 +89,6 @@ public class Backend extends JFrame implements ActionListener {
 		consola.setWrapStyleWord(true);
 		consola.setSize(400, 200);
 		panel.add(consola, BorderLayout.CENTER);
-
 		JProgressBar progressBar = new JProgressBar();
 		panel.add(progressBar, BorderLayout.SOUTH);
 
@@ -104,7 +103,7 @@ public class Backend extends JFrame implements ActionListener {
 	public void entrenar() {
 		try {
 			//TODO
-			double [] metricas = orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo());
+			double [] metricas = orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo(),consola);
 			orquestador.setMetrics(panelModelos.getModeloSeleccionado(), metricas[0], 0, 0);
 			
 		} catch (Exception e) {

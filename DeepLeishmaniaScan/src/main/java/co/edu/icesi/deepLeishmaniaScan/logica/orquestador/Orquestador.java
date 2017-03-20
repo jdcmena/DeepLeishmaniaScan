@@ -3,6 +3,8 @@ package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.JTextArea;
+
 import co.edu.icesi.deepLeishmaniaScan.framework.API;
 import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
@@ -33,13 +35,13 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public double[] entrenar(String path) throws Exception{
-		return entrenamiento.entrenar(path);
+	public double[] entrenar(String path, JTextArea consola) throws Exception{
+		return entrenamiento.entrenar(path, consola);
 	}
 
 	@Override
-	public double clasificar(String path) throws Exception{
-		return clasificacion.clasificar(path);
+	public double clasificar(String path, JTextArea consola) throws Exception{
+		return clasificacion.clasificar(path,consola);
 	}
 
 	@Override

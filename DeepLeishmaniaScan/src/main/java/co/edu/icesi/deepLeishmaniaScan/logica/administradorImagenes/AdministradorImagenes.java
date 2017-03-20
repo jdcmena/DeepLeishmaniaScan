@@ -1,12 +1,13 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.imaging.*;
-import org.openimaj.image.colour.*;
 
 public class AdministradorImagenes implements IAdministradorImagenes {
 
@@ -14,7 +15,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 
 	private static final char OS = File.separatorChar;
 	
-	public static final String RUTA_BASE = "." + OS + "src" + OS + "main" + OS + "resources" + OS;
+	public static final String RUTA_BASE = "." + OS;
 
 	/**
 	 * ruta del directorio del conjunto de datos
@@ -28,9 +29,12 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	 * ruta del directorio de imagenes con diagn�stico negativo
 	 */
 	public static final String RUTA_NEGATIVOS = RUTA_BASE + "negativos";
+	
+	private List<File> newImages;
 
 	public AdministradorImagenes() throws Exception {
 		initFolers();
+		newImages = new ArrayList<>();
 	}
 
 	@Override
@@ -48,7 +52,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	public String getRutaConjuntoDeDatos() {
 		return RUTA_CONJUNTO_DE_DATOS;
 	}
-
+	
 	@Override
 	public void cargarNuevasImagenes(String path) throws Exception {
 		File parent = new File(path);
@@ -57,6 +61,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 			File origin = new File(iter.next().getAbsolutePath());
 			File destn = new File(RUTA_CONJUNTO_DE_DATOS + OS + origin.getName().hashCode());
 			FileUtils.copyFile(origin, destn);
+			newImages.add(destn);
 		}
 	}
 

@@ -19,7 +19,7 @@ public interface IAdministradorImagenes {
 	public String getRutaConjuntoDeDatos();
 	
 	/**
-	 * Carga imagenes de una carpeta
+	 * Carga imagenes de una carpeta y realiza la conversion del canal RGB a XYZ [Modificable]
 	 * @param path la direcci�n can�nica del directorio que contiene las imagenes
 	 */
 	public void cargarNuevasImagenes(String path) throws Exception;

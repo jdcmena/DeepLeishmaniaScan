@@ -1,5 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.procesamiento;
 
+import javax.swing.JTextArea;
+
 public interface IEntrenamiento {
 	
 	/**
@@ -18,6 +20,6 @@ public interface IEntrenamiento {
 	 * @return TODO
 	 * @throws Exception 
 	 */
-	public double[] entrenar(String path) throws Exception;
+	public double[] entrenar(String path, JTextArea consola) throws Exception;
 	
 }

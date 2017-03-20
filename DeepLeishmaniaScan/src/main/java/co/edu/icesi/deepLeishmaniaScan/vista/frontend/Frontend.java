@@ -30,6 +30,7 @@ public class Frontend extends JFrame {
 	private static final long serialVersionUID = -6987076966121203944L;
 	private PanelModelosFrontend panelModelosFrontend;
 	private Backend backend;
+	private JTextArea consolaF; 
 	private Orquestador orquestador;
 
 	public Frontend() {
@@ -103,16 +104,16 @@ public class Frontend extends JFrame {
 		getContentPane().add(panel, gbc_panel);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setWrapStyleWord(true);
-		textArea.setSize(400, 200);
-		panel.add(textArea, BorderLayout.CENTER);
+		consolaF = new JTextArea();
+		consolaF.setEditable(false);
+		consolaF.setWrapStyleWord(true);
+		consolaF.setSize(400, 200);
+		panel.add(consolaF, BorderLayout.CENTER);
 
 		JProgressBar progressBar = new JProgressBar();
 		panel.add(progressBar, BorderLayout.SOUTH);
 
-		JScrollPane jsp = new JScrollPane(textArea);
+		JScrollPane jsp = new JScrollPane(consolaF);
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		backend = new Backend(true);
@@ -150,7 +151,7 @@ public class Frontend extends JFrame {
 			} else if (selected.isFile()) {
 				try{
 				String modelPath = panelModelosFrontend.getModeloSeleccionado().getRunConfigPath();
-				probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath);
+				probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath,consolaF);
 				}
 				catch(Exception e){
 					JOptionPane.showMessageDialog(this, e.getMessage());

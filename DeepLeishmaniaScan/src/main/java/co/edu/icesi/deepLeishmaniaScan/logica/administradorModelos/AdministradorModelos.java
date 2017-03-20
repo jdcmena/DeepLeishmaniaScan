@@ -26,6 +26,9 @@ public class AdministradorModelos implements IAdministradorModelos {
 	private static final String MODELS_LIST = "." + OS + "modelsList.txt";
 	private static final String JSON_EXT = ".json";
 	
+	
+	
+	
 	private Gson gson;
 	
 	private ArrayList<Modelo> listaModelos;
