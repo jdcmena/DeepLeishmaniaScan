@@ -79,7 +79,6 @@ def runModel(runConfigJson, imagePath):
     img = load_img(imagePath,False, (150, 150))
     x = img_to_array(img).reshape((1,150,150,3))
     #prediction = loaded_model.predict_classes(x,batch_size=1, verbose=1)
-    #p = loaded_model.predict_proba(x, batch_size=32,verbose=1)
     print("---------predict----------")
     p = seq.predict(x)
     print(p)
@@ -87,6 +86,11 @@ def runModel(runConfigJson, imagePath):
     print("---------predict Classes---------")
     pe = seq.predict_classes(x)
     print(pe)
+
+
+
+    print(pe[:2])
+
     print("---------predict Generator---------")
     predictionR = seq.predict_generator(prediction_generator, 1)
     print(predictionR)
@@ -128,3 +132,4 @@ runModel(catchedVars['filepath'],catchedVars['imgPath'])
 
 
 ##http://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/
+#stackoverflow.com/questions/4171638/keras-output-of-model-predict-proba/41729210#41729210

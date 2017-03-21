@@ -17,6 +17,8 @@ from keras.optimizers import SGD, RMSprop
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.applications.inception_v3 import InceptionV3
+from keras.utils import np_utils
+
 #from keras.utils.visualize_util import plot
 
 ##runConfigJson has hyperparameters
@@ -139,6 +141,14 @@ def runModel(runConfigJson):
     shuffle=True
     )
 
+    predict_gen = test_datagen.flow_from_directory(
+    train_data_dir,
+    target_size=(img_width, img_height),
+    batch_size=batch_size_var,
+    class_mode='categorical',
+    shuffle=True
+    )
+
     print("Saving model...")
     model_json = loaded_model.to_json()
     with open("models/"+str(modelPath)+"/"+str(modelPath)+"-arch.json", "w") as json_file:
@@ -151,17 +161,18 @@ def runModel(runConfigJson):
     evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=80,max_q_size=10, nb_worker=4, pickle_safe=True)
     print("Accuracy: %.2f%%" % (evaluation[1]*100))
     
-    #pred = loaded_model.predict_generator(eval_generator, val_samples=50,max_q_size=10, nb_worker=1, pickle_safe=False)
-    #for element in pred:
-    #    print(element)
+    pred = loaded_model.predict_generator(eval_generator, val_samples=2,max_q_size=10, nb_worker=1, pickle_safe=False)
+    for element in pred:
+        print(element)
     
     
     #rint('predicting...')
-    #
-    #predictionR = loaded_model.predict_generator(prediction_generator, 1)
-    #print(predictionR)
-    #evR = loaded_model.evaluate_generator(prediction_generator, 1)
-    #print(evR)
+    
+    predictionR = loaded_model.predict_generator(predict_gen, 1)
+    print(predictionR)
+
+    evR = loaded_model.evaluate_generator(predict_gen, 1)
+    print(evR)
     
     print('finished')
 
