@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -41,8 +42,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 		principalB = ventana;
 		setLayout(new BorderLayout());
 		fillDLF();
-		listaModelos = new JList<>(dlm);
-		listaModelos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listaModelos.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -52,8 +51,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 				modeloSeleccionado = (Modelo) source.getSelectedValue();
 				habilitarEntrenar();
 				principalB.modeloSeleccionado(modeloSeleccionado);
-				listaModelos.repaint();
-				listaModelos.updateUI();
 			}
 		});
 		this.add(listaModelos, BorderLayout.CENTER);
@@ -121,13 +118,17 @@ public class PanelModelos extends JPanel implements ActionListener {
 	}
 
 	public void fillDLF() {
-		if(dlm == null){
-		dlm = new DefaultListModel<>();
+		//dlm = new DefaultListModel<>();
+		Modelo[] list = principalB.getListaModelos().toArray(new Modelo[0]);
+		if(listaModelos== null){
+		listaModelos = new JList<>(list);
 		}
-		for (Modelo modelo : principalB.getListaModelos()) {
-			dlm.addElement(modelo);
+		else{
+			listaModelos.setListData(list);
+			listaModelos.setCellRenderer(new DefaultListCellRenderer());
 		}
-		this.repaint();
+		listaModelos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listaModelos.setCellRenderer(new DefaultListCellRenderer());
 	}
 
 }

@@ -3,6 +3,7 @@ package co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -98,7 +99,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw1.write(j1);
 		fw2.write(j2);
 
-		out = new PrintWriter(new FileWriter(MODELS_LIST, true));
+		out = new PrintWriter(new FileWriter(MODELS_LIST, true),true);
 		out.append(Integer.toString(model.getID()) + "\n");
 
 		fw1.flush();
@@ -107,6 +108,9 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw1.close();
 		fw2.close();
 		out.flush();
+		out.close();
+		
+		out= new PrintWriter(new FileWriter(MODELS_LIST, true),true);
 		out.close();
 
 	}
@@ -165,7 +169,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 			createModelFolder(Integer.toString(modelo.getID()));
 		}
 		guardarModelo(modelo, geneneraciones, imagenPorGeneracion, tasaAprendizaje, momentum, nesterov);
-
+		loadSavedModels();
 	}
 
 	/**

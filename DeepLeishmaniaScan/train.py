@@ -52,13 +52,13 @@ def runModel(runConfigJson):
 
     ##prediction_data_dir=dataParentDirString+'/prediction'## data/prediction' #
     
-    json_file = open('inceptionV3.json', 'r')
+    json_file = open('inceptionV3_1.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     inceptionModel = model_from_json(loaded_model_json)
     
     # load weights into base model
-    inceptionModel.load_weights("inceptionV3.h5")
+    inceptionModel.load_weights("InceptionV3_1.h5")
     
     
     
