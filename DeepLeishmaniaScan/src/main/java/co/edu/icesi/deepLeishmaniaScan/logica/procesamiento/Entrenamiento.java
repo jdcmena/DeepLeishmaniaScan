@@ -24,8 +24,8 @@ public class Entrenamiento implements IEntrenamiento {
 	}
 
 	@Override
-	public double[] entrenar(String path, JTextArea consola) throws Exception {
-		return api.entrenar(path, consola);
+	public void entrenar(String path, JTextArea consola) throws Exception {
+		api.entrenar(path, consola);
 	}
 
 }

@@ -7,9 +7,9 @@ public interface IClasificacion {
 	/**
 	 * clasificar una imagen
 	 * @param path ruta del modelo a usar
-	 * @return porcentaje de certeza de diagnóstico positivo
+	 * @return porcentaje de certeza de diagnï¿½stico positivo
 	 * @throws Exception 
 	 */
-	public double clasificar(String path, JTextArea consola) throws Exception;
+	public void clasificar(String path, JTextArea consola) throws Exception;
 
 }

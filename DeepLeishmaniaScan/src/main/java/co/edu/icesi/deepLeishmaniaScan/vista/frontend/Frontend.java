@@ -151,7 +151,7 @@ public class Frontend extends JFrame {
 			} else if (selected.isFile()) {
 				try{
 				String modelPath = panelModelosFrontend.getModeloSeleccionado().getRunConfigPath();
-				probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath,consolaF);
+				//probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath,consolaF);
 				}
 				catch(Exception e){
 					JOptionPane.showMessageDialog(this, e.getMessage());

@@ -82,20 +82,20 @@ public class Backend extends JFrame implements ActionListener {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setLayout(new BorderLayout(0, 0));
-
+		panel.setLayout(new BorderLayout());
 		consola = new JTextArea();
 		consola.setEditable(false);
 		consola.setWrapStyleWord(true);
 		consola.setSize(400, 200);
 		panel.add(consola, BorderLayout.CENTER);
+		
 		JProgressBar progressBar = new JProgressBar();
 		panel.add(progressBar, BorderLayout.SOUTH);
 
 		JScrollPane jsp = new JScrollPane(consola);
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		getContentPane().add(panel, BorderLayout.SOUTH);
-		getContentPane().add(panelConfiguracion, BorderLayout.CENTER);
+		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
 		getContentPane().add(panelModelos, BorderLayout.WEST);
 
 	}
@@ -103,8 +103,8 @@ public class Backend extends JFrame implements ActionListener {
 	public void entrenar() {
 		try {
 			//TODO
-			double [] metricas = orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo(),consola);
-			orquestador.setMetrics(panelModelos.getModeloSeleccionado(), metricas[0], 0, 0);
+			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo(),consola);
+			//orquestador.setMetrics(panelModelos.getModeloSeleccionado(), metricas[0], 0, 0);
 			
 		} catch (Exception e) {
 			log.info(e.getMessage());

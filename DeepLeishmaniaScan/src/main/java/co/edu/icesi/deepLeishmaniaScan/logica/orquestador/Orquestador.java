@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JTextArea;
+import javax.swing.JTextArea;
 
 import co.edu.icesi.deepLeishmaniaScan.framework.API;
 import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
@@ -35,13 +36,13 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public double[] entrenar(String path, JTextArea consola) throws Exception{
-		return entrenamiento.entrenar(path, consola);
+	public void entrenar(String path, JTextArea consola) throws Exception{
+		entrenamiento.entrenar(path, consola);
 	}
 
 	@Override
-	public double clasificar(String path, JTextArea consola) throws Exception{
-		return clasificacion.clasificar(path,consola);
+	public void clasificar(String path, JTextArea consola) throws Exception{
+		clasificacion.clasificar(path,consola);
 	}
 
 	@Override
@@ -104,9 +105,9 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	////////////////////////////////////////
 	
 	private void init() throws Exception{
-		IAPI API = new API();
 		administradorModelos = new AdministradorModelos();
 		administradorImagenes = new AdministradorImagenes();
+		IAPI API = new API(this);
 		clasificacion = new Clasificacion(API);
 		entrenamiento = new Entrenamiento(API);
 	}
