@@ -35,7 +35,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	public AdministradorImagenes() throws Exception {
 		initFolers();
 		newImages = new ArrayList<>();
-		//setupKFoldCrossValidate();
+		// setupKFoldCrossValidate();
 	}
 
 	@Override
@@ -129,10 +129,35 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		String class1Route = datasetClasses[0].getAbsolutePath();
 		String class2Route = datasetClasses[1].getAbsolutePath();
 
-		//tempList.addAll(Arrays.asList(temp));
-		
 		File[] imgClass1 = new File(class1Route).listFiles();
 		File[] imgClass2 = new File(class2Route).listFiles();
+
+		int qImgClass1 = (int) (imgClass1.length * ((K-1) / K));
+		int qImgClass2 = (int) (imgClass2.length * ((K-1) / K));
+		
+		int qImgClass1Test = (int) (imgClass1.length * (1-((K-1) / K)));
+		int qImgClass2Test = (int) (imgClass2.length * (1-((K-1) / K)));
+
+		ArrayList<ArrayList<File>> testFiles = new ArrayList<>();
+		//First test folds
+		int pivot = 0;
+		for (int i = 1; i <= K; i++) {
+			ArrayList<File> temp = new ArrayList<>();
+			
+			for (int j = pivot; j < qImgClass1Test*i; j++) {
+				temp.add(imgClass1[j]);
+			}
+			for (int j = pivot; j < qImgClass2Test*i; j++) {
+				temp.add(imgClass2[j]);
+			}
+			pivot = qImgClass2Test*i;
+			temp.trimToSize();
+			
+			testFiles.add(temp);
+		}
+		
+		ArrayList<ArrayList<File>> training = new ArrayList<>();
+		
 
 		for (int i = 1; i <= K; i++) {
 			File dir1 = new File(RUTA_BASE + "fold" + i + OS + class1Name);
@@ -154,43 +179,13 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 
 		}
 
-		int total = imgClass1.length + imgClass2.length;
-		if ((imgClass1.length * 2 != total || imgClass1.length < total * 0.40) || (imgClass2.length * 2 != total || imgClass2.length < total * 0.40)){
-			throw new Exception("Asegurese que la cantidad de imagenes por cada clase sea igual (Ej: # de imagenes de clase1: 1000, # de imagenes de clase2: 1000");
-		}
+		double multiFold = (K - 1) / K;
 
-			System.out.println("total=" + total);
-
-		for (int i = 1; i < K; i++) {
-			double sub = K - i;
-			double multiFold = sub / K;
-			System.out.println("multifold=" + multiFold);
-			int q4EClass = (int) ((total * multiFold) / 2);
-			System.out.println("quantity 4 each class =" + q4EClass);
-			int q4EClassTest = (int) ((total * (1 - multiFold)) / 2);
-			System.out.println("quantity for each test class =" + q4EClassTest);
-			int pivot = 0;
-
-			for (int j = 0; j < q4EClass; j++) {
-				System.out.println("class loop counter =" + j);
-				/*
-				 * FileUtils.copyFile(imgClass1[j], new File(RUTA_BASE + "fold"
-				 * + i + OS + class1Name)); FileUtils.copyFile(imgClass2[j], new
-				 * File(RUTA_BASE + "fold" + i + OS + class2Name)); pivot++;
-				 */
-			}
-
-			for (int t = pivot; t < q4EClassTest; t++) {
-				System.out.println("test class loop counter =" + t);
-				/*
-				 * FileUtils.copyFile(imgClass1[t], new File(RUTA_BASE +
-				 * "fold-test" + i + OS + class1Name));
-				 * FileUtils.copyFile(imgClass2[t], new File(RUTA_BASE +
-				 * "fold-test" + i + OS + class2Name));
-				 */
-			}
-
-		}
+		// int q4EClass1 = (int) (qImgClass1 * multiFold);
+		// int q4EClass2 = (int) (qImgClass2 * multiFold);
+		//
+		// int q4EClassTest1 = (int) (qImgClass1 * (1 - multiFold));
+		// int q4EClassTest2 = (int) (qImgClass2 * (1 - multiFold));
 
 	}
 
