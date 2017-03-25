@@ -132,33 +132,77 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		File[] imgClass1 = new File(class1Route).listFiles();
 		File[] imgClass2 = new File(class2Route).listFiles();
 
-		int qImgClass1 = (int) (imgClass1.length * ((K-1) / K));
-		int qImgClass2 = (int) (imgClass2.length * ((K-1) / K));
-		
-		int qImgClass1Test = (int) (imgClass1.length * (1-((K-1) / K)));
-		int qImgClass2Test = (int) (imgClass2.length * (1-((K-1) / K)));
+		int qImgClass1 = (int) (imgClass1.length * ((K - 1) / K));
+		int qImgClass2 = (int) (imgClass2.length * ((K - 1) / K));
+
+		int qImgClass1Test = (int) (imgClass1.length * (1 - ((K - 1) / K)));
+		int qImgClass2Test = (int) (imgClass2.length * (1 - ((K - 1) / K)));
 
 		ArrayList<ArrayList<File>> testFiles = new ArrayList<>();
-		//First test folds
+		ArrayList<ArrayList<File>> trainingFiles = new ArrayList<>();
+		// First test folds
 		int pivot = 0;
+		System.out.println(pivot);
 		for (int i = 1; i <= K; i++) {
 			ArrayList<File> temp = new ArrayList<>();
-			
-			for (int j = pivot; j < qImgClass1Test*i; j++) {
+
+			for (int j = pivot; j < qImgClass1Test * i; j++) {
 				temp.add(imgClass1[j]);
 			}
-			for (int j = pivot; j < qImgClass2Test*i; j++) {
+			for (int j = pivot; j < qImgClass2Test * i; j++) {
 				temp.add(imgClass2[j]);
 			}
-			pivot = qImgClass2Test*i;
+			pivot = qImgClass2Test * i;
+			System.out.println(pivot);
 			temp.trimToSize();
-			
+
 			testFiles.add(temp);
 		}
-		
-		ArrayList<ArrayList<File>> training = new ArrayList<>();
-		
 
+		ArrayList<File> tr1 = new ArrayList<>();
+		ArrayList<File> tr2 = new ArrayList<>();
+		ArrayList<File> tr3 = new ArrayList<>();
+		ArrayList<File> tr4 = new ArrayList<>();
+		ArrayList<File> tr5 = new ArrayList<>();
+
+		// 1
+		tr1.addAll(testFiles.get(2));
+		tr1.addAll(testFiles.get(3));
+		tr1.addAll(testFiles.get(4));
+		tr1.addAll(testFiles.get(5));
+		tr1.trimToSize();
+		// 2
+		tr2.addAll(testFiles.get(1));
+		tr2.addAll(testFiles.get(3));
+		tr2.addAll(testFiles.get(4));
+		tr2.addAll(testFiles.get(5));
+		tr2.trimToSize();
+		// 3
+		tr3.addAll(testFiles.get(1));
+		tr3.addAll(testFiles.get(2));
+		tr3.addAll(testFiles.get(4));
+		tr3.addAll(testFiles.get(5));
+		tr3.trimToSize();
+		// 4
+		tr4.addAll(testFiles.get(1));
+		tr4.addAll(testFiles.get(2));
+		tr4.addAll(testFiles.get(3));
+		tr4.addAll(testFiles.get(5));
+		tr4.trimToSize();
+		// 5
+		tr5.addAll(testFiles.get(1));
+		tr5.addAll(testFiles.get(2));
+		tr5.addAll(testFiles.get(3));
+		tr5.addAll(testFiles.get(4));
+		tr5.trimToSize();
+
+		trainingFiles.add(tr1);
+		trainingFiles.add(tr2);
+		trainingFiles.add(tr3);
+		trainingFiles.add(tr4);
+		trainingFiles.add(tr5);
+
+		
 		for (int i = 1; i <= K; i++) {
 			File dir1 = new File(RUTA_BASE + "fold" + i + OS + class1Name);
 			File dir2 = new File(RUTA_BASE + "fold" + i + OS + class2Name);
@@ -179,13 +223,16 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 
 		}
 
-		double multiFold = (K - 1) / K;
+		for (ArrayList<File> list : testFiles) {
+			for (int i = 0; i < list.size(); i++) {
+				
+			}
 
-		// int q4EClass1 = (int) (qImgClass1 * multiFold);
-		// int q4EClass2 = (int) (qImgClass2 * multiFold);
-		//
-		// int q4EClassTest1 = (int) (qImgClass1 * (1 - multiFold));
-		// int q4EClassTest2 = (int) (qImgClass2 * (1 - multiFold));
+		}
+
+		for (ArrayList<File> list : trainingFiles) {
+
+		}
 
 	}
 

@@ -158,22 +158,22 @@ def runModel(runConfigJson):
 
     print(str(modelPath)+" saved successfuly")
 
-    evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=80,max_q_size=10, nb_worker=4, pickle_safe=True)
+    evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
     print("Accuracy: %.2f%%" % (evaluation[1]*100))
     
-    pred = loaded_model.predict_generator(eval_generator, val_samples=2,max_q_size=10, nb_worker=1, pickle_safe=False)
-    for element in pred:
-        print(element)
+    #pred = loaded_model.predict_generator(eval_generator, val_samples=2,max_q_size=10, nb_worker=1, pickle_safe=False)
+    #for element in pred:
+    #    print(element)
     
     
     #rint('predicting...')
     
-    predictionR = loaded_model.predict_generator(predict_gen, 1)
-    print(predictionR)
+    #predictionR = loaded_model.predict_generator(predict_gen, 1)
+    #print(predictionR)
 
-    evR = loaded_model.evaluate_generator(predict_gen, 1)
-    print(evR)
+    #evR = loaded_model.evaluate_generator(predict_gen, 1)
+    #print(evR)
     
-    print('finished')
+    ##print('finished')
 
 runModel(catchedVars['filepath'])
