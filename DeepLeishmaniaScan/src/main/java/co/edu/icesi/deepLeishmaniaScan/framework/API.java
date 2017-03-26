@@ -66,8 +66,7 @@ public class API implements IAPI {
 				try {
 					String temp = "nothing";
 					while ((line = reader.readLine()) != null) {
-						System.out.println(line);
-						consola.setText(consola.getText() + "\n" + line);
+						consola.append(line);
 						if (flag == 1) {
 							if (line.contains("Accuracy")) {
 								temp = line.split(" ")[1];
@@ -79,9 +78,7 @@ public class API implements IAPI {
 						}
 
 					}
-					System.out.println(temp);
-					System.out.println(line);
-					consola.setText(consola.getText() + "\n" + line);
+					consola.append(line);
 				} catch (IOException io) {
 					io.printStackTrace();
 				}

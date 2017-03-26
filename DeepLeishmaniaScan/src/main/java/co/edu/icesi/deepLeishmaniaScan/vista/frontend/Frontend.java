@@ -21,6 +21,9 @@ import javax.swing.border.TitledBorder;
 
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 import co.edu.icesi.deepLeishmaniaScan.vista.backend.Backend;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.SwingConstants;
 
 public class Frontend extends JFrame {
 
@@ -30,15 +33,17 @@ public class Frontend extends JFrame {
 	private static final long serialVersionUID = -6987076966121203944L;
 	private PanelModelosFrontend panelModelosFrontend;
 	private Backend backend;
-	private JTextArea consolaF; 
+	private JTextArea consolaF;
+	private JLabel lblSiResultado;
+	private JLabel lblNoResultado;
 	private Orquestador orquestador;
 
 	public Frontend() {
 
 		setTitle("Ventana de Clasificacion");
-		setSize(480, 430);
+		setSize(420, 373);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 206, 0, 0 };
+		gridBagLayout.columnWidths = new int[] { 206, 130, 0 };
 		gridBagLayout.rowHeights = new int[] { 250, 36, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 1.0, Double.MIN_VALUE };
@@ -105,16 +110,42 @@ public class Frontend extends JFrame {
 		panel.setLayout(new BorderLayout(0, 0));
 
 		consolaF = new JTextArea();
+		consolaF.setLineWrap(true);
 		consolaF.setEditable(false);
 		consolaF.setWrapStyleWord(true);
 		consolaF.setSize(400, 200);
-		panel.add(consolaF, BorderLayout.CENTER);
 
-		JProgressBar progressBar = new JProgressBar();
-		panel.add(progressBar, BorderLayout.SOUTH);
+		//JProgressBar progressBar = new JProgressBar();
+		//panel.add(progressBar, BorderLayout.SOUTH);
 
 		JScrollPane jsp = new JScrollPane(consolaF);
-		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		panel.add(jsp, BorderLayout.CENTER);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Diagnostico", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(panel_1, BorderLayout.EAST);
+		GridLayout gl_panel_1 = new GridLayout(2,2);
+		gl_panel_1.setVgap(5);
+		gl_panel_1.setHgap(5);
+		panel_1.setLayout(gl_panel_1);
+		
+		JLabel lblSiLbl = new JLabel("Positivo:");
+		lblSiLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_1.add(lblSiLbl);
+		
+		lblSiResultado = new JLabel("");
+		lblSiResultado.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_1.add(lblSiResultado);
+		
+		lblNoResultado = new JLabel("Negativo:");
+		lblNoResultado.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_1.add(lblNoResultado);
+		
+		JLabel lblNoLbl = new JLabel("");
+		lblNoLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_1.add(lblNoLbl);
+
 
 		backend = new Backend(true);
 		orquestador = backend.getOrquestadorInstance();
@@ -122,7 +153,7 @@ public class Frontend extends JFrame {
 		modelPanel.add(panelModelosFrontend, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		// pack();
+		pack();
 
 	}
 
@@ -160,6 +191,14 @@ public class Frontend extends JFrame {
 		}
 		return probability;
 	}
+	
+	public void setPrediccionPositiva(String text){
+		lblSiResultado.setText(text);
+	}
+	public void setPrediccionNegativa(String text){
+		lblNoResultado.setText(text);
+	}
+	
 
 	public static void main(String[] args) {
 		Frontend fe = new Frontend();

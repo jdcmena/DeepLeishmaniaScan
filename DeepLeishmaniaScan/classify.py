@@ -83,12 +83,12 @@ def runModel(runConfigJson, imagePath):
     p = seq.predict(x)
     print(p)
 
-    print("---------predict Classes---------")
+    print("---------predict Classes---------1")
     pe = seq.predict_classes(x)
     print(pe)
 
 
-
+    print("---------predict Classes---------2")
     print(pe[:2])
 
     print("---------predict Generator---------")
