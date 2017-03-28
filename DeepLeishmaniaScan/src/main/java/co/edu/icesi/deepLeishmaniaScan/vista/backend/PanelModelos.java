@@ -6,18 +6,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
-import co.edu.icesi.deepLeishmaniaScan.vista.frontend.Frontend;
 
 public class PanelModelos extends JPanel implements ActionListener {
 
@@ -35,8 +31,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 	private JButton btnEntrenar;
 
 	private JButton btnNuevoModelo;
-
-	private DefaultListModel<Modelo> dlm;
 	
 	public PanelModelos(Backend ventana) {
 		principalB = ventana;
@@ -47,6 +41,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
+				@SuppressWarnings("unchecked")
 				JList<Modelo> source = (JList<Modelo>) e.getSource();
 				modeloSeleccionado = (Modelo) source.getSelectedValue();
 				habilitarEntrenar();
