@@ -10,6 +10,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,21 +32,28 @@ public class PanelModelos extends JPanel implements ActionListener {
 	private JButton btnEntrenar;
 
 	private JButton btnNuevoModelo;
-	
+		
 	public PanelModelos(Backend ventana) {
 		principalB = ventana;
 		setLayout(new BorderLayout());
 		fillDLF();
 		listaModelos.addListSelectionListener(new ListSelectionListener() {
-
+			
+			
+			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
-				@SuppressWarnings("unchecked")
-				JList<Modelo> source = (JList<Modelo>) e.getSource();
-				modeloSeleccionado = (Modelo) source.getSelectedValue();
-				habilitarEntrenar();
-				principalB.modeloSeleccionado(modeloSeleccionado);
+				
+				if (!e.getValueIsAdjusting()) {//This line prevents double events
+					@SuppressWarnings("unchecked")
+					JList<Modelo> source = (JList<Modelo>) e.getSource();
+					modeloSeleccionado = (Modelo) source.getSelectedValue();
+					habilitarEntrenar();
+					principalB.modeloSeleccionado(modeloSeleccionado);
+			    }
+				
+				
 			}
 		});
 		this.add(listaModelos, BorderLayout.CENTER);
@@ -113,7 +121,6 @@ public class PanelModelos extends JPanel implements ActionListener {
 	}
 
 	public void fillDLF() {
-		//dlm = new DefaultListModel<>();
 		Modelo[] list = principalB.getListaModelos().toArray(new Modelo[0]);
 		if(listaModelos== null){
 		listaModelos = new JList<>(list);

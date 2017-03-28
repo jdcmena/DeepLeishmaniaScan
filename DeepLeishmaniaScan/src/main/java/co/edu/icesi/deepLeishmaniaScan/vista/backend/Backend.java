@@ -154,6 +154,7 @@ public class Backend extends JFrame implements ActionListener {
 	public void modeloSeleccionado(Modelo modelo) {
 		try {
 			panelConfiguracion.mostrarHiperparametros(modelo);
+			repaint();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
