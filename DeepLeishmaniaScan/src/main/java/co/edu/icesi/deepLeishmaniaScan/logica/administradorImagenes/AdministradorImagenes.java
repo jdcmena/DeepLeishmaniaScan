@@ -35,6 +35,8 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	public AdministradorImagenes() throws Exception {
 		initFolers();
 		newImages = new ArrayList<>();
+		
+		//then we resize images and copy to their respective folders (leishmania and non-leishmania)
 		setupKFoldCrossValidate();
 	}
 
@@ -60,7 +62,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		Iterator<File> iter = FileUtils.iterateFiles(parent, null, true);
 		while (iter.hasNext()) {
 			File origin = new File(iter.next().getAbsolutePath());
-			File destn = new File(RUTA_CONJUNTO_DE_DATOS + OS + origin.getName().hashCode());
+			File destn = new File(RUTA_CONJUNTO_DE_DATOS);
 			FileUtils.copyFile(origin, destn);
 			newImages.add(destn);
 		}
@@ -70,9 +72,9 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception {
 		File newClassification = new File(imgPath);
 		if (positivo) {
-			FileUtils.copyFile(newClassification, new File(RUTA_POSITIVOS + OS + imgPath.hashCode()));
+			FileUtils.copyFile(newClassification, new File(RUTA_POSITIVOS));
 		} else {
-			FileUtils.copyFile(newClassification, new File(RUTA_NEGATIVOS + OS + imgPath.hashCode()));
+			FileUtils.copyFile(newClassification, new File(RUTA_NEGATIVOS));
 		}
 	}
 
@@ -114,15 +116,6 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 	private void setupKFoldCrossValidate() throws Exception {
 
 		File[] datasetClasses = new File(RUTA_CONJUNTO_DE_DATOS).listFiles();
-
-		/*
-		 * ArrayList<String> classNames = new ArrayList<>(); for(File file :
-		 * datasetClasses){ if(file.isDirectory()){
-		 * 
-		 * } }
-		 * 
-		 * String[] classNames =
-		 */
 
 		String class1Name = datasetClasses[0].getName();
 		String class2Name = datasetClasses[1].getName();
@@ -185,44 +178,50 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		fold1.add(f5c2);
 
 		ArrayList<File[]> fold2 = new ArrayList<>();
-		fold1.add(f1c1);
-		fold1.add(f3c1);
-		fold1.add(f4c1);
-		fold1.add(f5c1);
-		fold1.add(f1c2);
-		fold1.add(f3c2);
-		fold1.add(f4c2);
-		fold1.add(f5c2);
+		fold2.add(f1c1);
+		fold2.add(f3c1);
+		fold2.add(f4c1);
+		fold2.add(f5c1);
+		fold2.add(f1c2);
+		fold2.add(f3c2);
+		fold2.add(f4c2);
+		fold2.add(f5c2);
 
 		ArrayList<File[]> fold3 = new ArrayList<>();
-		fold1.add(f1c1);
-		fold1.add(f2c1);
-		fold1.add(f4c1);
-		fold1.add(f5c1);
-		fold1.add(f1c2);
-		fold1.add(f2c2);
-		fold1.add(f4c2);
-		fold1.add(f5c2);
+		fold3.add(f1c1);
+		fold3.add(f2c1);
+		fold3.add(f4c1);
+		fold3.add(f5c1);
+		fold3.add(f1c2);
+		fold3.add(f2c2);
+		fold3.add(f4c2);
+		fold3.add(f5c2);
 
 		ArrayList<File[]> fold4 = new ArrayList<>();
-		fold1.add(f1c1);
-		fold1.add(f2c1);
-		fold1.add(f3c1);
-		fold1.add(f5c1);
-		fold1.add(f1c2);
-		fold1.add(f2c2);
-		fold1.add(f3c2);
-		fold1.add(f5c2);
+		fold4.add(f1c1);
+		fold4.add(f2c1);
+		fold4.add(f3c1);
+		fold4.add(f5c1);
+		fold4.add(f1c2);
+		fold4.add(f2c2);
+		fold4.add(f3c2);
+		fold4.add(f5c2);
 
 		ArrayList<File[]> fold5 = new ArrayList<>();
-		fold1.add(f1c1);
-		fold1.add(f2c1);
-		fold1.add(f3c1);
-		fold1.add(f4c1);
-		fold1.add(f1c2);
-		fold1.add(f2c2);
-		fold1.add(f3c2);
-		fold1.add(f4c2);
+		fold5.add(f1c1);
+		fold5.add(f2c1);
+		fold5.add(f3c1);
+		fold5.add(f4c1);
+		fold5.add(f1c2);
+		fold5.add(f2c2);
+		fold5.add(f3c2);
+		fold5.add(f4c2);
+
+		fold1.trimToSize();
+		fold2.trimToSize();
+		fold3.trimToSize();
+		fold4.trimToSize();
+		fold5.trimToSize();
 
 		int counter = 4;
 		for (int i = 0; i < fold1.size(); i++) {
