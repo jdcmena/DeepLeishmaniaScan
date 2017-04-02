@@ -72,24 +72,10 @@ public class Backend extends JFrame implements ActionListener {
 			initPnlConfig();
 			pack();
 		}
+		else{
 		panelConfiguracion = new PanelConfiguracion(this);
-		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		getContentPane().add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.setEditable(true);
-		textArea.setRows(5);
-		
-		
-		JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        panel.add(scroll, BorderLayout.CENTER);
+		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
+		}
 		
 		//panel.add(scroll, BorderLayout.WEST);
 		
@@ -108,6 +94,23 @@ public class Backend extends JFrame implements ActionListener {
 		
 		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
 		getContentPane().add(panelModelos, BorderLayout.WEST);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel, BorderLayout.SOUTH);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		textArea = new JTextArea();
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		textArea.setEditable(true);
+		textArea.setRows(5);
+		
+		
+		JScrollPane scroll = new JScrollPane(textArea);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
+        panel.add(scroll, BorderLayout.CENTER);
 
 	}
 
