@@ -1,6 +1,10 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -89,8 +93,9 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		File negative = new File(RUTA_NEGATIVOS);
 		if (!dataset.exists()) {
 			dataset.mkdirs();
-			dataset.createNewFile();
+			dataset.createNewFile();			
 		}
+		
 		if (!positive.exists()) {
 			positive.mkdirs();
 			positive.createNewFile();
@@ -145,13 +150,13 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 
 		File[] imgClass1 = new File(class1Route).listFiles();
 		File[] imgClass2 = new File(class2Route).listFiles();
-
+/*
 		int qImgClass1 = (int) (imgClass1.length * ((K - 1) / K));
 		int qImgClass2 = (int) (imgClass2.length * ((K - 1) / K));
 
 		int qImgClass1Test = (int) (imgClass1.length * (1 - ((K - 1) / K)));
 		int qImgClass2Test = (int) (imgClass2.length * (1 - ((K - 1) / K)));
-
+*/
 		File[] f1c1 = divideByInteger(1, 5, imgClass1);
 		File[] f1c2 = divideByInteger(1, 5, imgClass2);
 
@@ -352,6 +357,38 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 		for (int i = division * (part - 1); i < division * part; i++) {
 			ret[index] = array[i];
 			index++;
+		}
+		return ret;
+	}
+	private boolean verifyHash() throws Exception{
+		boolean ret = false;
+		File hash = new File(RUTA_CONJUNTO_DE_DATOS+OS+"hash.txt");
+		if(hash.exists()){
+			String names = "";
+			BufferedReader reader = new BufferedReader(new FileReader(hash));
+			String hashText = reader.readLine();
+			File[] classes = new File(RUTA_CONJUNTO_DE_DATOS).listFiles();
+			for(File root : classes){
+				File[] list = root.listFiles();
+				for(File img : list){
+					names = names + img.getName().trim();
+				}
+			}
+			names = names.hashCode()+"";
+			if(hashText.equals(names)){
+				ret = true;
+			}
+			else{
+				PrintWriter out = new PrintWriter(new FileWriter(RUTA_CONJUNTO_DE_DATOS+OS+"hash.txt", false),true);
+				out.write(names);
+				ret = false;
+				out.flush();
+				out.close();
+			}
+			reader.close();
+		}
+		else{
+			ret = hash.createNewFile();
 		}
 		return ret;
 	}

@@ -49,7 +49,7 @@ public class Backend extends JFrame implements ActionListener {
 	 */
 
 	public Backend(boolean isFrontend) {
-
+		System.out.println("starting");
 		try {
 			orquestador = new Orquestador();
 		} catch (Exception e) {
@@ -104,7 +104,7 @@ public class Backend extends JFrame implements ActionListener {
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(true);
-		textArea.setRows(5);
+		textArea.setRows(10);
 		
 		
 		JScrollPane scroll = new JScrollPane(textArea);

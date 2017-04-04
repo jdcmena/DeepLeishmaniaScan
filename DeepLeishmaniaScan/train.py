@@ -42,16 +42,23 @@ def runModel(runConfigJson):
     momentum_var = hiperparameters[4]
     #decay_lR_var = hiperparameters[4]
     nesterov_var = hiperparameters[5]
-    batch_size_var = int(round((samples_per_epoch_var/10),0))
+    if samples_per_epoch_var>= 100:
+        batch_size_var = int(round((samples_per_epoch_var/10),0))
+    else:
+        batch_size_var = int(round((samples_per_epoch_var/5),0))
+
     img_width = 150
     img_height = 150
     nb_validation_samples = int(round((batch_size_var/2),0))
 
-    train_data_dir='conjuntoDeDatos'##'data/train'
-    validation_data_dir='conjuntoDeDatos'##'data/validation'
+    ##train_data_dir='conjuntoDeDatos'##'data/train'
+    ##validation_data_dir='conjuntoDeDatos'##'data/validation'
+
+    train_data_dir=['fold1','fold2','fold3','fold4','fold5']
+    validation_data_dir=['fold-test1','fold-test2','fold-test3','fold-test4','fold-test5']
+
     
     #loaded_model.save_weights("inceptionV3_1.h5")
-
     ##prediction_data_dir=dataParentDirString+'/prediction'## data/prediction' #
     
     json_file = open('inceptionV3_1.json', 'r')
@@ -99,9 +106,48 @@ def runModel(runConfigJson):
     )
     
     test_datagen = ImageDataGenerator()
-    
-    train_generator = train_datagen.flow_from_directory(
-        train_data_dir,
+
+    ##FOLDS
+
+    print("fold1")
+    train_generator_1 = train_datagen.flow_from_directory(
+        train_data_dir[0],
+        target_size=(img_width, img_height),
+        batch_size=batch_size_var,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold2")
+    train_generator_2 = train_datagen.flow_from_directory(
+        train_data_dir[1],
+        target_size=(img_width, img_height),
+        batch_size=batch_size_var,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold3")
+    train_generator_3 = train_datagen.flow_from_directory(
+        train_data_dir[2],
+        target_size=(img_width, img_height),
+        batch_size=batch_size_var,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold4")
+    train_generator_4 = train_datagen.flow_from_directory(
+        train_data_dir[3],
+        target_size=(img_width, img_height),
+        batch_size=batch_size_var,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold5")
+    train_generator_5 = train_datagen.flow_from_directory(
+        train_data_dir[4],
         target_size=(img_width, img_height),
         batch_size=batch_size_var,
         class_mode='categorical',
@@ -109,45 +155,165 @@ def runModel(runConfigJson):
         classes=['cutaneousLeishmaniasis','ISICArchive']
     )
     
-    class_dictionary = train_generator.class_indices
-    print(class_dictionary)
+    #class_dictionary = train_generator.class_indices
+    #print(class_dictionary)
 
-    validation_generator = test_datagen.flow_from_directory(
-        validation_data_dir,
+    print("fold-test1")
+    validation_generator_1 = test_datagen.flow_from_directory(
+        validation_data_dir[0],
         target_size=(img_width, img_height),
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
         classes=['cutaneousLeishmaniasis','ISICArchive']
     )
+    print("fold-test2")
+    validation_generator_2 = test_datagen.flow_from_directory(
+        validation_data_dir[1],
+        target_size=(img_width, img_height),
+        batch_size=nb_validation_samples,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold-test3")
+    validation_generator_3 = test_datagen.flow_from_directory(
+        validation_data_dir[2],
+        target_size=(img_width, img_height),
+        batch_size=nb_validation_samples,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold-test4")
+    validation_generator_4 = test_datagen.flow_from_directory(
+        validation_data_dir[3],
+        target_size=(img_width, img_height),
+        batch_size=nb_validation_samples,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+    print("fold-test5")
+    validation_generator_5 = test_datagen.flow_from_directory(
+        validation_data_dir[4],
+        target_size=(img_width, img_height),
+        batch_size=nb_validation_samples,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['cutaneousLeishmaniasis','ISICArchive']
+    )
+
+
     print("initializing fit...")
 
-    history = loaded_model.fit_generator(
-        train_generator,
+    accuracy_sets = [0.0,0.0,0.0,0.0,0.0]
+    
+    ########Fold 1
+    temp_1 = loaded_model.fit_generator(
+        train_generator_1,
         nb_epoch = nb_epoch_var,
         samples_per_epoch = samples_per_epoch_var,
-        validation_data = validation_generator,
+        validation_data = validation_generator_1,
         nb_val_samples=nb_validation_samples,
         verbose=1
     )
+    
+    evaluation = loaded_model.evaluate_generator(validation_generator_1, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    accuracy_sets[0]='{0:.3g}'.format(evaluation[1]*100)
+    print("Accuracy fold 1: %.2f%%" % (evaluation[1]*100))
+    
+    ########Fold 2
+    temp_2 = loaded_model.fit_generator(
+        train_generator_2,
+        nb_epoch = nb_epoch_var,
+        samples_per_epoch = samples_per_epoch_var,
+        validation_data = validation_generator_2,
+        nb_val_samples=nb_validation_samples,
+        verbose=1
+    )
+    
+    evaluation = loaded_model.evaluate_generator(validation_generator_2, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    accuracy_sets[1]='{0:.3g}'.format(evaluation[1]*100)
+    print("Accuracy fold 2: %.2f%%" % (evaluation[1]*100))
+    
+    ########Fold 3
+    temp_3 = loaded_model.fit_generator(
+        train_generator_3,
+        nb_epoch = nb_epoch_var,
+        samples_per_epoch = samples_per_epoch_var,
+        validation_data = validation_generator_3,
+        nb_val_samples=nb_validation_samples,
+        verbose=1
+    )
+    
+    evaluation = loaded_model.evaluate_generator(validation_generator_3, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    accuracy_sets[2]='{0:.3g}'.format(evaluation[1]*100)
+    print("Accuracy fold 3: %.2f%%" % (evaluation[1]*100))
+    
+    ########Fold 4
+    temp_4 = loaded_model.fit_generator(
+        train_generator_4,
+        nb_epoch = nb_epoch_var,
+        samples_per_epoch = samples_per_epoch_var,
+        validation_data = validation_generator_4,
+        nb_val_samples=nb_validation_samples,
+        verbose=1
+    )
+    
+    evaluation = loaded_model.evaluate_generator(validation_generator_4, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    accuracy_sets[3]='{0:.3g}'.format(evaluation[1]*100)
+    print("Accuracy fold 4: %.2f%%" % (evaluation[1]*100))
+    
+    ########Fold 5
+    temp_5 = loaded_model.fit_generator(
+        train_generator_5,
+        nb_epoch = nb_epoch_var,
+        samples_per_epoch = samples_per_epoch_var,
+        validation_data = validation_generator_5,
+        nb_val_samples=nb_validation_samples,
+        verbose=1
+    )
+    
+    evaluation = loaded_model.evaluate_generator(validation_generator_5, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    accuracy_sets[4]='{0:.3g}'.format(evaluation[1]*100)
+    print("Accuracy fold 5: %.2f%%" % (evaluation[1]*100))
+    var_total = 0.0
+    for element in accuracy_sets:
+        var_total = float(var_total)+float(element)
+
+
+
+    gblAcc = var_total/5.0
+
+    print("Global Accuracy:"+str(gblAcc)+"%")
+
+    #history = loaded_model.fit_generator(
+    #    train_generator,
+    #    nb_epoch = nb_epoch_var,
+    #    samples_per_epoch = samples_per_epoch_var,
+    #    validation_data = validation_generator,
+    #    nb_val_samples=nb_validation_samples,
+    #    verbose=1
+    #)
 
     #print(loaded_model.summary())
 
-    eval_generator = train_datagen.flow_from_directory(
-    train_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=batch_size_var,
-    class_mode='categorical',
-    shuffle=True
-    )
+    #eval_generator = train_datagen.flow_from_directory(
+    #train_data_dir,
+    #target_size=(img_width, img_height),
+    #batch_size=batch_size_var,
+    #class_mode='categorical',
+    #shuffle=True
+    #)
 
-    predict_gen = test_datagen.flow_from_directory(
-    train_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=batch_size_var,
-    class_mode='categorical',
-    shuffle=True
-    )
+    #predict_gen = test_datagen.flow_from_directory(
+    #train_data_dir,
+    #target_size=(img_width, img_height),
+    #batch_size=batch_size_var,
+    #class_mode='categorical',
+    #shuffle=True
+    #)
 
     print("Saving model...")
     model_json = loaded_model.to_json()
@@ -158,8 +324,8 @@ def runModel(runConfigJson):
 
     print(str(modelPath)+" saved successfuly")
 
-    evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
-    print("Accuracy: %.2f%%" % (evaluation[1]*100))
+    #evaluation = loaded_model.evaluate_generator(eval_generator, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
+    #print("Accuracy: %.2f%%" % (evaluation[1]*100))
     
     #pred = loaded_model.predict_generator(eval_generator, val_samples=2,max_q_size=10, nb_worker=1, pickle_safe=False)
     #for element in pred:

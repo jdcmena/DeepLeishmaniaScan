@@ -49,6 +49,7 @@ public class API implements IAPI {
 	}
 
 	private void runCommand(String command, int flag, JTextArea consola) throws Exception {
+		System.out.println("training script running...");
 
 		double[] relevantOutput = new double[2];
 
