@@ -15,24 +15,31 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
+
+/**
+ * Clase encargada de leer y persistir los modelos creados
+ * 
+ * @author jdcm
+ *
+ */
 public class AdministradorModelos implements IAdministradorModelos {
 
 	private static final Logger log = LoggerFactory.getLogger(AdministradorModelos.class);
 
 	private static final char OS = File.separatorChar;
-	private static final String MODELS_DIRECTORY = "." + OS + "models"
-			+ OS + "";
+	private static final String MODELS_DIRECTORY = "." + OS + "models" + OS + "";
 	private static final String MODELS_LIST = "." + OS + "modelsList.txt";
 	private static final String JSON_EXT = ".json";
-	
-	
-	
-	
-	private Gson gson;
-	
-	private ArrayList<Modelo> listaModelos;
 
-	public AdministradorModelos() {
+	private Gson gson;
+
+	private ArrayList<Modelo> listaModelos;
+	
+	private Orquestador orquestador;
+
+	public AdministradorModelos(Orquestador orquestador) {
+		this.orquestador = orquestador;
 		try {
 			gson = new GsonBuilder().setPrettyPrinting().create();
 			createRootModelsFolder();
@@ -68,7 +75,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		File modelJson = new File(folderPath);
 		modelJson.mkdir();
 		modelJson.createNewFile();
-		
+
 		model.setRutaDirectorioModelo(modelJson.getAbsolutePath());
 
 		modelJson = new File(folderPath + model.getID() + JSON_EXT);
@@ -82,8 +89,8 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw1 = new FileWriter(folderPath + model.getID() + JSON_EXT);
 		fw2 = new FileWriter(jsonRunConfigPath);
 
-		model.setRutaDirectorioModelo("models"+OS+model.getID()+OS);
-		
+		model.setRutaDirectorioModelo("models" + OS + model.getID() + OS);
+
 		String j1 = gson.toJson(model);
 		RunConfigDTO dto = new RunConfigDTO();
 		dto.setId(model.getID());
@@ -97,7 +104,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw1.write(j1);
 		fw2.write(j2);
 
-		out = new PrintWriter(new FileWriter(MODELS_LIST, true),true);
+		out = new PrintWriter(new FileWriter(MODELS_LIST, true), true);
 		out.append(Integer.toString(model.getID()) + "\n");
 
 		fw1.flush();
@@ -107,14 +114,14 @@ public class AdministradorModelos implements IAdministradorModelos {
 		fw2.close();
 		out.flush();
 		out.close();
-		
-		out= new PrintWriter(new FileWriter(MODELS_LIST, true),true);
+
+		out = new PrintWriter(new FileWriter(MODELS_LIST, true), true);
 		out.close();
 
 	}
 
 	/**
-	 * metodo encargado de asignar las m�tricas de inter�s al modelo que se est�
+	 * metodo encargado de asignar las metricas de interes al modelo que se esté
 	 * utilizando
 	 */
 	@Override
@@ -132,8 +139,32 @@ public class AdministradorModelos implements IAdministradorModelos {
 					fw.flush();
 					fw.close();
 				}
+				break;
 			}
 		}
+	}
+
+	@Override
+	public void setMetrics(Modelo model) throws Exception{
+		log.info("setting metrics for "+model.getID());
+		for (Modelo m : listaModelos) {
+			if (m.getID() == model.getID()) {
+				double [] metrics = orquestador.getMetricasEntrenamiento();
+				m.setAccuracy(metrics[0]);
+				m.setSensibility(metrics[1]);
+				m.setSensibility(metrics[2]);
+				File modelJson = new File(MODELS_DIRECTORY + model.getID() + OS + model.getID() + JSON_EXT);
+				if (modelJson.exists()) {
+					FileWriter fw = new FileWriter(MODELS_DIRECTORY + model.getID() + OS + model.getID() + JSON_EXT);
+					String js = gson.toJson(model);
+					fw.write(js);
+					fw.flush();
+					fw.close();
+				}
+				break;
+			}
+		}
+		log.info("finished training");
 	}
 
 	/**

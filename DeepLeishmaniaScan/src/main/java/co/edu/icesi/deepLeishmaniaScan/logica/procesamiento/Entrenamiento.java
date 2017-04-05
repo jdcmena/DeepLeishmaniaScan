@@ -18,7 +18,7 @@ public class Entrenamiento implements IEntrenamiento {
 	}
 
 	@Override
-	public String[] obtenerMetricas(String path) throws Exception {
+	public String[] obtenerMetricasGuardadas(String path) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -26,6 +26,11 @@ public class Entrenamiento implements IEntrenamiento {
 	@Override
 	public void entrenar(String path, JTextArea consola) throws Exception {
 		api.entrenar(path, consola);
+	}
+
+	@Override
+	public double[] getMetricasEntrenamiento() {
+		return api.getMetricasEntrenamiento();
 	}
 
 }

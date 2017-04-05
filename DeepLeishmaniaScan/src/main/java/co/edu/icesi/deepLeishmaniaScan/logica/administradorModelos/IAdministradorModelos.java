@@ -50,4 +50,6 @@ public interface IAdministradorModelos {
 	public void crearModelo(int gen, int imgXG, double tasaA, double momentum, boolean selected, String name) throws Exception;
 	
 	public void setMetrics(Modelo model, double accuracy, double sensibility, double specificity) throws Exception;
+
+	public void setMetrics(Modelo model) throws Exception;
 }

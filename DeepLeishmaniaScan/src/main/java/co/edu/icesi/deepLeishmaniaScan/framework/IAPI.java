@@ -14,5 +14,7 @@ public interface IAPI {
 	public void setClassificationModule(IClasificacion clasificacion);
 	
 	public void setTrainingModule(IEntrenamiento entrenmaiento);
+	
+	public double[] getMetricasEntrenamiento();
 
 }

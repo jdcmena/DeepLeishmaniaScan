@@ -1,7 +1,7 @@
 package co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos;
 
 /**
- * Clase para cargar y guardar informacion de cada modelo en formato JSON
+ * Clase para cargar y guardar los parametros de entrenamiento de cada modelo en formato JSON
  * @author JuanDavid
  *
  */

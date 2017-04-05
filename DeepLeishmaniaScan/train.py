@@ -285,8 +285,8 @@ def runModel(runConfigJson):
 
 
     gblAcc = var_total/5.0
-
-    print("Global Accuracy:"+str(gblAcc)+"%")
+    #    This output is read from Java program as line.split(" ")[1]   #####
+    print("Global Accuracy: "+str(gblAcc)+" %")
 
     #history = loaded_model.fit_generator(
     #    train_generator,

@@ -4,10 +4,13 @@ public class Modelo {
 
 	private int id;
 	private String nombre;
-	private String pesos;
-	private String arquitectura;
 	private String runConfig;
 	private String direccionDirectorio;
+	/**
+	 * 0: precisión
+	 * 1: sensibilidad
+	 * 2: especificidad
+	 */
 	private String[] metricas;
 
 	/**
@@ -33,16 +36,6 @@ public class Modelo {
 	public Modelo(String nombre) {
 		id = nombre.getBytes().hashCode();
 		this.nombre = nombre;
-	}
-
-	public String getRutaArchivoPesos() {
-		// TODO - implement Modelo.getRutaArchivoPesos
-		throw new UnsupportedOperationException();
-	}
-
-	public String getRutaArchivoArquitectura() {
-		// TODO - implement Modelo.getRutaArchivoArquitectura
-		throw new UnsupportedOperationException();
 	}
 
 	public String getNombre() {

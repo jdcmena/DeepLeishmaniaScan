@@ -2,10 +2,7 @@ package co.edu.icesi.deepLeishmaniaScan.logica.orquestador;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.swing.JTextArea;
-import javax.swing.JTextArea;
-
 import co.edu.icesi.deepLeishmaniaScan.framework.API;
 import co.edu.icesi.deepLeishmaniaScan.framework.IAPI;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.AdministradorImagenes;
@@ -17,32 +14,35 @@ import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.Clasificacion;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.Entrenamiento;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IClasificacion;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IEntrenamiento;
+import co.edu.icesi.deepLeishmaniaScan.vista.backend.Backend;
 
 public class Orquestador implements IAdministradorImagenes, IAdministradorModelos, IClasificacion, IEntrenamiento {
-	
-	
+
 	private IAdministradorImagenes administradorImagenes;
 	private IAdministradorModelos administradorModelos;
 	private IClasificacion clasificacion;
 	private IEntrenamiento entrenamiento;
+	
+	private Backend backend;
 
-	public Orquestador() throws Exception{
+	public Orquestador(Backend backend) throws Exception {
+		this.backend = backend;
 		init();
 	}
 
 	@Override
-	public String[] obtenerMetricas(String path) throws Exception{
-		return entrenamiento.obtenerMetricas(path);
+	public String[] obtenerMetricasGuardadas(String path) throws Exception {
+		return entrenamiento.obtenerMetricasGuardadas(path);
 	}
 
 	@Override
-	public void entrenar(String path, JTextArea consola) throws Exception{
+	public void entrenar(String path, JTextArea consola) throws Exception {
 		entrenamiento.entrenar(path, consola);
 	}
 
 	@Override
-	public void clasificar(String path, JTextArea consola) throws Exception{
-		clasificacion.clasificar(path,consola);
+	public void clasificar(String path, JTextArea consola) throws Exception {
+		clasificacion.clasificar(path, consola);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public Modelo getModeloPorId(String id) throws IOException{
+	public Modelo getModeloPorId(String id) throws IOException {
 		return administradorModelos.getModeloPorId(id);
 	}
 
@@ -67,8 +67,9 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public void crearModelo(int gen, int imgXG, double tasaA, double tasaM, boolean selected, String name) throws Exception{
-		administradorModelos.crearModelo(gen, imgXG, tasaA,tasaM,selected,name);
+	public void crearModelo(int gen, int imgXG, double tasaA, double tasaM, boolean selected, String name)
+			throws Exception {
+		administradorModelos.crearModelo(gen, imgXG, tasaA, tasaM, selected, name);
 	}
 
 	@Override
@@ -87,25 +88,26 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	}
 
 	@Override
-	public void cargarNuevasImagenes(String path) throws Exception{
-		administradorImagenes.cargarNuevasImagenes(path);
+	public void cargarNuevasImagenes(String path, boolean leishmaniasis) throws Exception {
+		administradorImagenes.cargarNuevasImagenes(path, leishmaniasis);
 	}
-	
+
 	@Override
-	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception{
+	public void nuevaClasificacion(String imgPath, boolean positivo) throws Exception {
 		administradorImagenes.nuevaClasificacion(imgPath, positivo);
 	}
-	
+
 	@Override
-	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean selected) throws Exception {
+	public void guardarModelo(Modelo model, int gen, int imgXG, double tasaA, double tasaD, boolean selected)
+			throws Exception {
 		administradorModelos.guardarModelo(model, gen, imgXG, tasaA, tasaD, selected);
 	}
-	
+
 	////////////////////////////////////////
 	////////////////////////////////////////
-	
-	private void init() throws Exception{
-		administradorModelos = new AdministradorModelos();
+
+	private void init() throws Exception {
+		administradorModelos = new AdministradorModelos(this);
 		administradorImagenes = new AdministradorImagenes();
 		IAPI API = new API(this);
 		clasificacion = new Clasificacion(API);
@@ -115,6 +117,11 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 	@Override
 	public void setMetrics(Modelo model, double accuracy, double sensibility, double specificity) throws Exception {
 		administradorModelos.setMetrics(model, accuracy, sensibility, specificity);
+	}
+	
+	@Override
+	public void setMetrics(Modelo model) throws Exception{
+		administradorModelos.setMetrics(model);
 	}
 
 	@Override
@@ -127,9 +134,13 @@ public class Orquestador implements IAdministradorImagenes, IAdministradorModelo
 		return administradorImagenes.getSpecificity();
 	}
 
+	public void notificar() {
+		backend.trainNotified();
+	}
 
-
-	
-	
+	@Override
+	public double[] getMetricasEntrenamiento() {
+		return entrenamiento.getMetricasEntrenamiento();
+	}
 
 }

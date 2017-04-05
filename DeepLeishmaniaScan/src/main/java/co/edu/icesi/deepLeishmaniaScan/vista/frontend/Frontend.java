@@ -5,23 +5,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
-import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
-
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 import co.edu.icesi.deepLeishmaniaScan.vista.backend.Backend;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 
@@ -160,7 +155,7 @@ public class Frontend extends JFrame {
 	public String[] obtenerMetricas(String path) {
 		String[] array = null;
 		try {
-			array = orquestador.obtenerMetricas(path);
+			array = orquestador.obtenerMetricasGuardadas(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -21,8 +21,9 @@ public interface IAdministradorImagenes {
 	/**
 	 * Carga imagenes de una carpeta y realiza la conversion del canal RGB a XYZ [Modificable]
 	 * @param path la direcci�n can�nica del directorio que contiene las imagenes
+	 * @param leishmaniasis si las imagenes contenidas en la carpeta son de diagnosticos positivos para leishmaniasis cutanea
 	 */
-	public void cargarNuevasImagenes(String path) throws Exception;
+	public void cargarNuevasImagenes(String path, boolean leishmaniasis) throws Exception;
 	
 	/**
 	 * Agrega una imagen clasificada al directorio de imagenes con diagnostico

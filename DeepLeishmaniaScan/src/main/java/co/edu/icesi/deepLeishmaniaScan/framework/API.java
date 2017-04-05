@@ -5,17 +5,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.swing.JTextArea;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.esotericsoftware.minlog.Log;
+
+import co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes.Filter;
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IClasificacion;
 import co.edu.icesi.deepLeishmaniaScan.logica.procesamiento.IEntrenamiento;
 
-import javax.swing.JTextArea;
-
+/**
+ * Clase encargada de utilizar los scripts con los procedimientos de
+ * entrenamiento y clasificacion. Referenciado de: Keras.io
+ * 
+ * @author jdcm
+ *
+ */
 public class API implements IAPI {
 
+	private static final Logger log = LoggerFactory.getLogger(API.class);
+
+	
 	private static final char OS = File.separatorChar;
 	public static final String CLASIFY_SCRIPT = "python classify.py ";
 	public static final String TRAIN_SCRIPT = "python train.py ";
@@ -23,19 +36,11 @@ public class API implements IAPI {
 	private IClasificacion clasificacion;
 	private IEntrenamiento entrenamiento;
 	private Orquestador orq;
+	
+	private double[] metricas;
 
-	/*
-	 * private StringWriter writer; private ScriptEngineManager manager; private
-	 * ScriptContext context; private ScriptEngine engine;
-	 */
 	public API(Orquestador orq) {
 		this.orq = orq;
-		/*
-		 * writer = new StringWriter(); // ouput will be stored here manager =
-		 * new ScriptEngineManager(); context = new SimpleScriptContext();
-		 * context.setWriter(writer); // configures output redirection engine =
-		 * manager.getEngineByName("python");
-		 */
 	}
 
 	@Override
@@ -49,8 +54,7 @@ public class API implements IAPI {
 	}
 
 	private void runCommand(String command, int flag, JTextArea consola) throws Exception {
-		System.out.println("training script running...");
-
+		log.info("training script running...");
 		double[] relevantOutput = new double[2];
 
 		Runtime r = Runtime.getRuntime();
@@ -67,19 +71,23 @@ public class API implements IAPI {
 				try {
 					String temp = "nothing";
 					while ((line = reader.readLine()) != null) {
-						consola.append(line);
+						consola.append(line+"\n");
 						if (flag == 1) {
-							if (line.contains("Accuracy")) {
+							if (line.contains("Global")) {
 								temp = line.split(" ")[1];
 								relevantOutput[0] = Double.parseDouble(temp.substring(0, temp.length() - 2));
+								Log.info("got accuracy");
 							}
 						}
 						if (flag == 2) {
 							// TODO Classification [#CLASSID]
+							
 						}
 
 					}
+					metricas = relevantOutput;
 					consola.append(line);
+					orq.notificar();
 				} catch (IOException io) {
 					io.printStackTrace();
 				}
@@ -87,8 +95,10 @@ public class API implements IAPI {
 				if (reader != null) {
 
 				}
+				
 			}
-
+			
+			
 		}).start();
 	}
 
@@ -100,6 +110,11 @@ public class API implements IAPI {
 	@Override
 	public void setTrainingModule(IEntrenamiento entrenmaiento) {
 		this.entrenamiento = entrenmaiento;
+	}
+
+	@Override
+	public double[] getMetricasEntrenamiento() {
+		return metricas;
 	}
 
 }

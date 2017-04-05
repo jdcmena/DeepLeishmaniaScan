@@ -1,14 +1,11 @@
 package co.edu.icesi.deepLeishmaniaScan.vista.backend;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -44,6 +41,8 @@ public class Backend extends JFrame implements ActionListener {
 	private PanelModelos panelModelos;
 	private JTextArea textArea;
 
+	private Modelo inTraining;
+
 	/**
 	 * para cargar nuevas imagenes
 	 */
@@ -51,8 +50,9 @@ public class Backend extends JFrame implements ActionListener {
 	public Backend(boolean isFrontend) {
 		System.out.println("starting");
 		try {
-			orquestador = new Orquestador();
+			orquestador = new Orquestador(this);
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.info(e.getMessage());
 		}
 		if (!isFrontend) {
@@ -68,60 +68,66 @@ public class Backend extends JFrame implements ActionListener {
 			getContentPane().setLayout(new BorderLayout());
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-			
 			initPnlConfig();
 			pack();
+		} else {
+			panelConfiguracion = new PanelConfiguracion(this);
+			getContentPane().add(panelConfiguracion, BorderLayout.EAST);
 		}
-		else{
-		panelConfiguracion = new PanelConfiguracion(this);
-		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
-		}
-		
-		//panel.add(scroll, BorderLayout.WEST);
-		
+
+		// panel.add(scroll, BorderLayout.WEST);
 
 	}
 
 	private void initPnlConfig() {
-		
+
 		panelConfiguracion = new PanelConfiguracion(this);
 		panelModelos = new PanelModelos(this);
-		
-		
-		
+
 		JScrollPane jsp = new JScrollPane(textArea);
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
 		getContentPane().add(panelModelos, BorderLayout.WEST);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		textArea = new JTextArea();
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(true);
-		textArea.setRows(10);
-		
-		
+		textArea.setRows(12);
+
 		JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        panel.add(scroll, BorderLayout.CENTER);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		panel.add(scroll, BorderLayout.CENTER);
 
 	}
 
 	public void entrenar() {
 		try {
-			//TODO
-			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo(),textArea);
-			//orquestador.setMetrics(panelModelos.getModeloSeleccionado(), metricas[0], 0, 0);
-			
+			inTraining = panelModelos.getModeloSeleccionado();
+			orquestador.entrenar(panelModelos.getModeloSeleccionado().getRutaDirectorioModelo(), textArea);
+			panelModelos.deshabilitarEntrenar();
+
 		} catch (Exception e) {
 			log.info(e.getMessage());
+		}
+	}
+
+	public void trainNotified() {
+		try {
+			log.info("backend notified");
+			orquestador.setMetrics(inTraining);
+			inTraining = null;
+			panelModelos.habilitarEntrenar();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -137,8 +143,8 @@ public class Backend extends JFrame implements ActionListener {
 
 	}
 
-	public void setParametros(Modelo model, int epoch, int imgPerEpoch, double learningRate, double momentumRate
-			, boolean nesterov) {
+	public void setParametros(Modelo model, int epoch, int imgPerEpoch, double learningRate, double momentumRate,
+			boolean nesterov) {
 		orquestador.setParametrosModelo(model, epoch, imgPerEpoch, learningRate, momentumRate, nesterov);
 	}
 
@@ -146,9 +152,9 @@ public class Backend extends JFrame implements ActionListener {
 		return orquestador.getListaModelos();
 	}
 
-	public void cargarImagenesEntrenamiento(String path) {
+	public void cargarImagenesEntrenamiento(String path, boolean leishmaniasis) {
 		try {
-			orquestador.cargarNuevasImagenes(path);
+			orquestador.cargarNuevasImagenes(path, leishmaniasis);
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}
@@ -184,12 +190,16 @@ public class Backend extends JFrame implements ActionListener {
 		int returnVal = jfc.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			String selected = jfc.getSelectedFile().getAbsolutePath();
-			this.cargarImagenesEntrenamiento(selected);
+			int answer = JOptionPane.showConfirmDialog(this,
+					"¿las imagenes en esta carpeta son de lesiones de leishmaniasis cutanea?", "Seleccione una opcion",
+					JOptionPane.YES_NO_OPTION);
+			System.out.println(answer);
+			this.cargarImagenesEntrenamiento(selected, true);
 		}
 
 	}
-	
-	public Orquestador getOrquestadorInstance(){
+
+	public Orquestador getOrquestadorInstance() {
 		return orquestador;
 	}
 
