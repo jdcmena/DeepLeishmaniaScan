@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.swing.JTextArea;
 
+import org.apache.commons.math3.util.Decimal64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +56,10 @@ public class API implements IAPI {
 
 	private void runCommand(String command, int flag, JTextArea consola) throws Exception {
 		log.info("training script running...");
-		double[] relevantOutput = new double[2];
+		double[] relevantOutput = new double[3];
+		relevantOutput[0] = 0.0;
+		relevantOutput[1] = 0.0;
+		relevantOutput[2] = 0.0;
 
 		Runtime r = Runtime.getRuntime();
 		// ProcessBuilder pb = new ProcessBuilder("python","train.py",command);
@@ -74,9 +78,20 @@ public class API implements IAPI {
 						consola.append(line+"\n");
 						if (flag == 1) {
 							if (line.contains("Global")) {
-								temp = line.split(" ")[1];
+								temp = line.split(" ")[2];
 								relevantOutput[0] = Double.parseDouble(temp.substring(0, temp.length() - 2));
 								Log.info("got accuracy");
+							}
+							if(line.contains("Sensitivity")){
+								temp = line.split(" ")[1];
+								relevantOutput[1] = Double.parseDouble(temp.substring(0, temp.length()-2));
+							}
+							if(line.contains("Specificity")){
+								relevantOutput[2] = Double.parseDouble(temp.substring(0, temp.length()-2));
+							}
+							if(relevantOutput[0] != 0.0 && relevantOutput[1] != 0.0 && relevantOutput[2] != 0.0){
+								metricas = relevantOutput;
+								orq.notificar();
 							}
 						}
 						if (flag == 2) {
@@ -85,9 +100,8 @@ public class API implements IAPI {
 						}
 
 					}
-					metricas = relevantOutput;
+					
 					consola.append(line);
-					orq.notificar();
 				} catch (IOException io) {
 					io.printStackTrace();
 				}

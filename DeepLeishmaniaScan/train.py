@@ -1,10 +1,15 @@
 from __future__ import division # /: float div, //: integer div
 from PIL import Image
 import os
+import glob
+import cv2
+import math
+import pickle
+import datetime
+import pandas as pd
 import argparse
 import h5py
 import numpy as np
-import glob
 import time
 import pydot
 import jsonreader
@@ -18,6 +23,9 @@ from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.applications.inception_v3 import InceptionV3
 from keras.utils import np_utils
+from sklearn.cross_validation import train_test_split
+from sklearn.metrics import confusion_matrix
+
 
 #from keras.utils.visualize_util import plot
 
@@ -28,6 +36,9 @@ from keras.utils import np_utils
 parser = argparse.ArgumentParser(description='training script')
 parser.add_argument('filepath')
 catchedVars = vars(parser.parse_args())
+#y_actual[0:100] = 0
+img_width = 150
+img_height = 150
 
 
 
@@ -47,12 +58,12 @@ def runModel(runConfigJson):
     else:
         batch_size_var = int(round((samples_per_epoch_var/5),0))
 
-    img_width = 150
-    img_height = 150
     nb_validation_samples = int(round((batch_size_var/2),0))
 
     ##train_data_dir='conjuntoDeDatos'##'data/train'
     ##validation_data_dir='conjuntoDeDatos'##'data/validation'
+
+    train_data_source='datasource'
 
     train_data_dir=['fold1','fold2','fold3','fold4','fold5']
     validation_data_dir=['fold-test1','fold-test2','fold-test3','fold-test4','fold-test5']
@@ -95,7 +106,7 @@ def runModel(runConfigJson):
     sgd = SGD(lr=lrate, momentum=momentum_var, decay=decayRC, nesterov=nesterov_var)
     loaded_model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=['accuracy','mean_absolute_error'])
+                  metrics=['accuracy'])
     
     print('compilation successful')
 
@@ -116,7 +127,7 @@ def runModel(runConfigJson):
         batch_size=batch_size_var,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold2")
     train_generator_2 = train_datagen.flow_from_directory(
@@ -125,7 +136,7 @@ def runModel(runConfigJson):
         batch_size=batch_size_var,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold3")
     train_generator_3 = train_datagen.flow_from_directory(
@@ -134,7 +145,7 @@ def runModel(runConfigJson):
         batch_size=batch_size_var,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold4")
     train_generator_4 = train_datagen.flow_from_directory(
@@ -143,7 +154,7 @@ def runModel(runConfigJson):
         batch_size=batch_size_var,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold5")
     train_generator_5 = train_datagen.flow_from_directory(
@@ -152,7 +163,7 @@ def runModel(runConfigJson):
         batch_size=batch_size_var,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     
     #class_dictionary = train_generator.class_indices
@@ -165,7 +176,7 @@ def runModel(runConfigJson):
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold-test2")
     validation_generator_2 = test_datagen.flow_from_directory(
@@ -174,7 +185,7 @@ def runModel(runConfigJson):
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold-test3")
     validation_generator_3 = test_datagen.flow_from_directory(
@@ -183,7 +194,7 @@ def runModel(runConfigJson):
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold-test4")
     validation_generator_4 = test_datagen.flow_from_directory(
@@ -192,7 +203,7 @@ def runModel(runConfigJson):
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
     print("fold-test5")
     validation_generator_5 = test_datagen.flow_from_directory(
@@ -201,8 +212,18 @@ def runModel(runConfigJson):
         batch_size=nb_validation_samples,
         class_mode='categorical',
         shuffle=True,
-        classes=['cutaneousLeishmaniasis','ISICArchive']
+        classes=['Leishmaniasis','Non_Leishmaniasis']
     )
+
+    #####this generator will be used to create confusion matrix, after training finished
+    confusion_mat_gen = test_datagen.flow_from_directory(
+        train_data_source,
+        target_size=(img_width,img_height),
+        batch_size=10,
+        class_mode='categorical',
+        shuffle=True,
+        classes=['Leishmaniasis','Non_Leishmaniasis']
+        )
 
 
     print("initializing fit...")
@@ -222,7 +243,9 @@ def runModel(runConfigJson):
     evaluation = loaded_model.evaluate_generator(validation_generator_1, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
     accuracy_sets[0]='{0:.3g}'.format(evaluation[1]*100)
     print("Accuracy fold 1: %.2f%%" % (evaluation[1]*100))
-    
+
+
+
     ########Fold 2
     temp_2 = loaded_model.fit_generator(
         train_generator_2,
@@ -288,6 +311,57 @@ def runModel(runConfigJson):
     #    This output is read from Java program as line.split(" ")[1]   #####
     print("Global Accuracy: "+str(gblAcc)+" %")
 
+    #prediction = loaded_model.predict_generator(validation_generator_1, val_samples=100)
+
+#https://groups.google.com/forum/#!searchin/keras-users/confusion$20matrix|sort:relevance/keras-users/W-AdTqL7oNE/wojuYRFFBQAJ
+    y_test_hat = []
+    y_test = []
+    counter = 0
+    for X, y in confusion_mat_gen:
+        # Append to y_test
+        y_test.extend(y.ravel())
+
+        # Predict and append to y_test_hat
+        y_hat_batch = loaded_model.predict(X)
+        y_test_hat.extend(y_hat_batch.ravel())
+
+        counter = counter +1
+
+        if counter == 50:
+            break
+
+    # Convert to np.array and round predictions
+    y_test = np.array(y_test)
+    y_test_hat = np.round(y_test_hat)
+
+    cf = confusion_matrix(y_test, y_test_hat)
+
+    tn = float(cf[0][0])
+    fp = float(cf[0][1])
+    fn = float(cf[1][0])
+    tp = float(cf[1][1])
+    sensitivity=(tp/(tp+fn))*100
+    specificity=(tn/(tn+fp))*100
+    print("Sensitivity: %.2f%%" % sensitivity)
+    print("Specificity: %.2f%%" % specificity)
+    #print(cf)
+
+
+
+    #for i in xrange(0,len(prediction)):
+    #    if np.all(prediction[i] <= 0.5):
+    #        prediction[i] = 0
+    #    else:
+    #        prediction[i] = 1
+
+    #print np.sum(prediction)
+    
+    #CM = confusion_matrix(y_actual,prediction)
+    
+    
+
+
+
     #history = loaded_model.fit_generator(
     #    train_generator,
     #    nb_epoch = nb_epoch_var,
@@ -315,6 +389,8 @@ def runModel(runConfigJson):
     #shuffle=True
     #)
 
+    
+
     print("Saving model...")
     model_json = loaded_model.to_json()
     with open("models/"+str(modelPath)+"/"+str(modelPath)+"-arch.json", "w") as json_file:
@@ -341,5 +417,37 @@ def runModel(runConfigJson):
     #print(evR)
     
     ##print('finished')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
 
 runModel(catchedVars['filepath'])

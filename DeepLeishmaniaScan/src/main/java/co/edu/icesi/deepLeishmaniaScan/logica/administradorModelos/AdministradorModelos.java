@@ -152,7 +152,7 @@ public class AdministradorModelos implements IAdministradorModelos {
 				double [] metrics = orquestador.getMetricasEntrenamiento();
 				m.setAccuracy(metrics[0]);
 				m.setSensibility(metrics[1]);
-				m.setSensibility(metrics[2]);
+				m.setSpecificity(metrics[2]);
 				File modelJson = new File(MODELS_DIRECTORY + model.getID() + OS + model.getID() + JSON_EXT);
 				if (modelJson.exists()) {
 					FileWriter fw = new FileWriter(MODELS_DIRECTORY + model.getID() + OS + model.getID() + JSON_EXT);

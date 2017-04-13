@@ -71,7 +71,7 @@ def runModel(runConfigJson, imagePath):
     prediction_generator = prediction_datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
-        batch_size=1,
+        batch_size=50,
         class_mode='categorical',
         classes=['cutaneousLeishmaniasis','ISICArchive']
     )
@@ -111,10 +111,12 @@ def runModel(runConfigJson, imagePath):
 #
 
     y_classes = np_utils.to_categorical(p, 2)
+    y_classes_moar = np_utils.to_categorical(predictionR, 2)
     print("-------to_Categorical----------")
     print(p)
     print(".-------classes-------")
     print(y_classes)
+    print(y_classes_moar)
 
         
         

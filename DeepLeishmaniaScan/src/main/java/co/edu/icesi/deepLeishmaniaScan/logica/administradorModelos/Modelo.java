@@ -7,7 +7,7 @@ public class Modelo {
 	private String runConfig;
 	private String direccionDirectorio;
 	/**
-	 * 0: precisión
+	 * 0: accuracy
 	 * 1: sensibilidad
 	 * 2: especificidad
 	 */
