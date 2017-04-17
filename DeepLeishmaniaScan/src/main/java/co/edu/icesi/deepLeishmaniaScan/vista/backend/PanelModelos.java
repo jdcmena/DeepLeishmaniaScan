@@ -80,7 +80,7 @@ public class PanelModelos extends JPanel implements ActionListener {
 		btnNuevoModelo.setActionCommand("NM");
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_1.gridwidth = 8;
+		gbc_btnNewButton_1.gridwidth = 9;
 		gbc_btnNewButton_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewButton_1.gridx = 10;
 		gbc_btnNewButton_1.gridy = 0;

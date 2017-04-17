@@ -53,7 +53,6 @@ public class Filter {
 			e1.printStackTrace();
 		}
 
-		/// GOTTA READ TXT
 		BufferedReader br = null;
 		Hashtable<String, String> positives = new Hashtable<>(1500);
 		Hashtable<String, String> negatives = new Hashtable<>(1500);
@@ -62,7 +61,6 @@ public class Filter {
 			String line = br.readLine();
 			while (line != null) {
 				negatives.put(line, line);
-				// no.add(line);
 				line = br.readLine();
 			}
 			br.close();
@@ -71,21 +69,13 @@ public class Filter {
 
 			while (line != null) {
 				positives.put(line, line);
-				// yes.add(line);
 				line = br.readLine();
 			}
-			// yes.trimToSize();
-			// no.trimToSize();
 
 			log.info("wrote images' ids");
-			/// /GOTTA READ TXT
 
-			// yes and no arraylists contains images' ids to divide positive &
-			// negative images
 			File[] dirs = new File(SOURCE).listFiles();
-			int yesCounter = 0;
-			int noCounter = 0;
-			int notFound = 0;
+
 			log.info("resizing images, moving to folders");
 			for (File file : dirs) {
 				String[] whole = file.getName().split("_");
@@ -93,54 +83,35 @@ public class Filter {
 				String filter = whole[3];
 				if (filter.equals("C01")) {
 					if (positives.containsKey(varNombre)) {
+
 						FileUtils.copyFileToDirectory(file, yes_route);
 						positives.remove(varNombre);
 						File dest = new File(yes_route + OS + file.getName());
 						BufferedImage img = ImageIO.read(dest);
 						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
 						ImageIO.write(img, "jpg", dest);
-						yesCounter++;
+						//to XYZ
+						ColorSpaceTransformer.imageToXYZ(dest);
+
 					} else if (negatives.containsKey(varNombre)) {
+
 						FileUtils.copyFileToDirectory(file, no_route);
 						negatives.remove(varNombre);
 						File dest = new File(no_route + OS + file.getName());
 						BufferedImage img = ImageIO.read(dest);
 						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
 						ImageIO.write(img, "jpg", dest);
-						noCounter++;
+						//to XYZ
+						ColorSpaceTransformer.imageToXYZ(dest);
+
+
 					} else {
-						notFound++;
+						// no action
 					}
 				}
-				/*
-				 * 
-				 * for (int i = 0; i < yes.size(); i++) { String varNombre =
-				 * file.getName().split("_")[1]; if
-				 * (varNombre.equals(yes.get(i))) {
-				 * FileUtils.copyFileToDirectory(file, yes_route);
-				 * yes.remove(i); found = true; File dest = new File(yes_route +
-				 * OS + file.getName()); BufferedImage img = ImageIO.read(dest);
-				 * img = getScaledInstance(img, 400, 400,
-				 * RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
-				 * ImageIO.write(img, "jpg", dest);
-				 * 
-				 * // FileUtils.copyFile(srcFile, destFile); // lower res
-				 * 
-				 * break; } }
-				 * 
-				 * if (!found) { FileUtils.copyFileToDirectory(file, no_route);
-				 * File dest = new File(no_route + OS + file.getName());
-				 * BufferedImage img = ImageIO.read(dest); img =
-				 * getScaledInstance(img, 400, 400,
-				 * RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
-				 * 
-				 * ImageIO.write(img, "jpg", dest); }
-				 */
 
 			}
-			log.info("yes counter =" + yesCounter);
-			log.info("no counter =" + noCounter);
-			log.info("not found counter =" + notFound);
+
 		} catch (Exception e) {
 
 		} finally {

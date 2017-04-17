@@ -50,8 +50,8 @@ public class API implements IAPI {
 	}
 
 	@Override
-	public void clasificar(String modelo, JTextArea consola) throws Exception {
-		runCommand(CLASIFY_SCRIPT + modelo, 2, consola);
+	public void clasificar(String line, JTextArea consola) throws Exception {
+		runCommand(CLASIFY_SCRIPT + line, 2, consola);
 	}
 
 	private void runCommand(String command, int flag, JTextArea consola) throws Exception {

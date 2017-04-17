@@ -17,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import co.edu.icesi.deepLeishmaniaScan.logica.administradorModelos.Modelo;
@@ -88,7 +90,7 @@ public class Backend extends JFrame implements ActionListener {
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		getContentPane().add(panelConfiguracion, BorderLayout.EAST);
-		getContentPane().add(panelModelos, BorderLayout.WEST);
+		getContentPane().add(panelModelos, BorderLayout.CENTER);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Consola", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -99,7 +101,9 @@ public class Backend extends JFrame implements ActionListener {
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(true);
-		textArea.setRows(12);
+		textArea.setRows(13);
+		DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		JScrollPane scroll = new JScrollPane(textArea);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

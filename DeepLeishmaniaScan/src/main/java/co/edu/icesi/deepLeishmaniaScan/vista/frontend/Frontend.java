@@ -15,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
+
 import co.edu.icesi.deepLeishmaniaScan.logica.orquestador.Orquestador;
 import co.edu.icesi.deepLeishmaniaScan.vista.backend.Backend;
 import java.awt.GridLayout;
@@ -27,6 +29,7 @@ public class Frontend extends JFrame {
 	 */
 	private static final long serialVersionUID = -6987076966121203944L;
 	private PanelModelosFrontend panelModelosFrontend;
+	private PanelImagen panelImagen;
 	private Backend backend;
 	private JTextArea consolaF;
 	private JLabel lblSiResultado;
@@ -43,45 +46,14 @@ public class Frontend extends JFrame {
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 1.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
-		JPanel panelImage = new JPanel();
-		panelImage.setBorder(
-				new TitledBorder(null, "Opciones de imagen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+
 		GridBagConstraints gbc_panelImage = new GridBagConstraints();
 		gbc_panelImage.fill = GridBagConstraints.BOTH;
 		gbc_panelImage.insets = new Insets(0, 0, 5, 5);
 		gbc_panelImage.gridx = 0;
 		gbc_panelImage.gridy = 0;
-		getContentPane().add(panelImage, gbc_panelImage);
-		GridBagLayout gbl_panelImage = new GridBagLayout();
-		gbl_panelImage.columnWidths = new int[] { 0, 0, 0 };
-		gbl_panelImage.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_panelImage.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panelImage.rowWeights = new double[] { 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panelImage.setLayout(gbl_panelImage);
-
-		JLabel lblImage = new JLabel("sumtext");
-		GridBagConstraints gbc_lblImage = new GridBagConstraints();
-		gbc_lblImage.fill = GridBagConstraints.VERTICAL;
-		gbc_lblImage.gridwidth = 2;
-		gbc_lblImage.gridheight = 8;
-		gbc_lblImage.insets = new Insets(0, 0, 5, 0);
-		gbc_lblImage.gridx = 0;
-		gbc_lblImage.gridy = 0;
-		panelImage.add(lblImage, gbc_lblImage);
-
-		JButton btnCargarImagen = new JButton("Cargar Imagen");
-		GridBagConstraints gbc_btnCargarImagen = new GridBagConstraints();
-		gbc_btnCargarImagen.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCargarImagen.gridx = 0;
-		gbc_btnCargarImagen.gridy = 8;
-		panelImage.add(btnCargarImagen, gbc_btnCargarImagen);
-
-		JButton btnClasificar = new JButton("Clasificar");
-		GridBagConstraints gbc_btnClasificar = new GridBagConstraints();
-		gbc_btnClasificar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnClasificar.gridx = 1;
-		gbc_btnClasificar.gridy = 8;
-		panelImage.add(btnClasificar, gbc_btnClasificar);
+		panelImagen = new PanelImagen(this);
+		getContentPane().add(panelImagen, gbc_panelImage);
 
 		JPanel modelPanel = new JPanel();
 		GridBagConstraints gbc_modelPanel = new GridBagConstraints();
@@ -109,38 +81,40 @@ public class Frontend extends JFrame {
 		consolaF.setEditable(false);
 		consolaF.setWrapStyleWord(true);
 		consolaF.setSize(400, 200);
+		consolaF.setRows(6);
+		DefaultCaret caret = (DefaultCaret) consolaF.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-		//JProgressBar progressBar = new JProgressBar();
-		//panel.add(progressBar, BorderLayout.SOUTH);
+		// JProgressBar progressBar = new JProgressBar();
+		// panel.add(progressBar, BorderLayout.SOUTH);
 
 		JScrollPane jsp = new JScrollPane(consolaF);
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		panel.add(jsp, BorderLayout.CENTER);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Diagnostico", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_1, BorderLayout.EAST);
-		GridLayout gl_panel_1 = new GridLayout(2,2);
+		GridLayout gl_panel_1 = new GridLayout(2, 2);
 		gl_panel_1.setVgap(5);
 		gl_panel_1.setHgap(5);
 		panel_1.setLayout(gl_panel_1);
-		
+
 		JLabel lblSiLbl = new JLabel("Positivo:");
 		lblSiLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblSiLbl);
-		
+
 		lblSiResultado = new JLabel("");
 		lblSiResultado.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblSiResultado);
-		
+
 		lblNoResultado = new JLabel("Negativo:");
 		lblNoResultado.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblNoResultado);
-		
+
 		JLabel lblNoLbl = new JLabel("");
 		lblNoLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblNoLbl);
-
 
 		backend = new Backend(true);
 		orquestador = backend.getOrquestadorInstance();
@@ -157,7 +131,6 @@ public class Frontend extends JFrame {
 		try {
 			array = orquestador.obtenerMetricasGuardadas(path);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return array;
@@ -166,34 +139,28 @@ public class Frontend extends JFrame {
 	public double clasificar(String path) {
 		double probability = 0;
 
-		JFileChooser jfc = new JFileChooser();
-		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		jfc.setDialogTitle("Seleccione la imagen que quiere clasificar");
-		int returnVal = jfc.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File selected = jfc.getSelectedFile();
-			if (selected.isDirectory()) {
-				JOptionPane.showMessageDialog(this, "Debe seleccionar una imagen para clasificar");
-			} else if (selected.isFile()) {
-				try{
+		File image = new File(path);
+		if (image.isDirectory()) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar una imagen para clasificar");
+		} else if (image.isFile()) {
+			try {
 				String modelPath = panelModelosFrontend.getModeloSeleccionado().getRunConfigPath();
-				//probability = orquestador.clasificar(selected.getAbsolutePath()+" "+modelPath,consolaF);
-				}
-				catch(Exception e){
-					JOptionPane.showMessageDialog(this, e.getMessage());
-				}
+				orquestador.clasificar(modelPath + " " + image.getAbsolutePath(), consolaF);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
+
 		return probability;
 	}
-	
-	public void setPrediccionPositiva(String text){
+
+	public void setPrediccionPositiva(String text) {
 		lblSiResultado.setText(text);
 	}
-	public void setPrediccionNegativa(String text){
+
+	public void setPrediccionNegativa(String text) {
 		lblNoResultado.setText(text);
 	}
-	
 
 	public static void main(String[] args) {
 		Frontend fe = new Frontend();

@@ -2,7 +2,6 @@ package co.edu.icesi.deepLeishmaniaScan.logica.administradorImagenes;
 
 import java.io.File;
 import java.util.List;
-
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.colour.ColourSpace;
@@ -39,5 +38,10 @@ public class ColorSpaceTransformer {
 		}
 		newImages.clear();
 	}
-
+	
+	public static void imageToXYZ(File file) throws Exception{
+		MBFImage converted = ColourSpace.convert(ImageUtilities.readMBF(file), XYZ);
+		ImageUtilities.write(converted, file);
+	}
+//https://github.com/lessthanoptimal/BoofCV/blob/v0.23/examples/src/boofcv/examples/features/ExampleFitEllipse.java
 }
