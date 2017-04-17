@@ -28,16 +28,15 @@ catchedVars = vars(parser.parse_args())
 
 def runModel(runConfigJson, imagePath):
 
-    train_data_dir='conjuntoDeDatos'##'data/train'
+    train_data_dir='datasource'##'data/train'
 
-    hiperparameters = jsonreader.readFileHip(runConfigJson) #TODO check array values
+    hiperparameters = jsonreader.readFileHip(runConfigJson)
 
     modelPath = hiperparameters[0]
     nb_epoch_var = hiperparameters[1]
     samples_per_epoch_var = hiperparameters[2]
     lrate = hiperparameters[3]
     momentum_var = hiperparameters[4]
-    #decay_lR_var = hiperparameters[4]
     nesterov_var = hiperparameters[5]
     batch_size_var = int(round((samples_per_epoch_var/10),0))
     img_width = 150
@@ -60,43 +59,59 @@ def runModel(runConfigJson, imagePath):
     sgd = SGD(lr=lrate, momentum=momentum_var, decay=decayRC, nesterov=nesterov_var)
     seq.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=['accuracy','mean_absolute_error'])
+                  metrics=['accuracy'])
 
 
 
 
 
-    prediction_datagen = ImageDataGenerator()
+    #prediction_datagen = ImageDataGenerator()
 
-    prediction_generator = prediction_datagen.flow_from_directory(
-        train_data_dir,
-        target_size=(img_width, img_height),
-        batch_size=50,
-        class_mode='categorical',
-        classes=['cutaneousLeishmaniasis','ISICArchive']
-    )
+    #prediction_generator = prediction_datagen.flow_from_directory(
+    #    train_data_dir,
+    #    target_size=(img_width, img_height),
+    #    batch_size=50,
+    #    class_mode='categorical',
+    #    classes=['Leishmaniasis','Non_Leishmaniasis']
+    #)
 
     img = load_img(imagePath,False, (150, 150))
     x = img_to_array(img).reshape((1,150,150,3))
     #prediction = loaded_model.predict_classes(x,batch_size=1, verbose=1)
     print("---------predict----------")
     p = seq.predict(x)
-    print(p)
+    #print(p)
 
-    print("---------predict Classes---------1")
+    #print(p[0][0])
+    #print(p[0][1])
+    #for e in p:
+    #    print(e[0])
+    #    print(e[1])
+
+    #print("---------predict Classes---------1")
     pe = seq.predict_classes(x)
-    print(pe)
+
+    #print("---------predict Classes---------2")
+    className = "nothing"
+    confidence = ""
+
+    if pe[0] == 0:
+        className = "Leishmaniasis"
+        confidence = str(p[0][0]*100)+"%"
+    else:
+        className = "Non-Leishmaniasis"
+        confidence = str(p[0][1]*100)+"%"
 
 
-    print("---------predict Classes---------2")
-    print(pe[:2])
+    print("Predicted class: "+className)
+    print("Confidence: "+confidence)
 
-    print("---------predict Generator---------")
-    predictionR = seq.predict_generator(prediction_generator, 1)
-    print(predictionR)
-    print("---------evaluate generator---------")
-    evR = seq.evaluate_generator(prediction_generator, 1)
-    print(evR)
+    #print("---------predict Generator---------")
+    #predictionR = seq.predict_generator(prediction_generator, 1)
+    #print(predictionR)
+    #print("---------evaluate generator---------")
+    #evR = seq.evaluate_generator(prediction_generator, 1)
+    #print(evR)
 
 
 #If you have a multi-class classification, I'm sure you must have used a softmax activation in the end (as your output).
@@ -110,13 +125,13 @@ def runModel(runConfigJson, imagePath):
 #
 #
 
-    y_classes = np_utils.to_categorical(p, 2)
-    y_classes_moar = np_utils.to_categorical(predictionR, 2)
-    print("-------to_Categorical----------")
-    print(p)
-    print(".-------classes-------")
-    print(y_classes)
-    print(y_classes_moar)
+    #y_classes = np_utils.to_categorical(p, 2)
+    #y_classes_moar = np_utils.to_categorical(predictionR, 2)
+    #print("-------to_Categorical----------")
+    #print(p)
+    #print(".-------classes-------")
+    #print(y_classes)
+    #rint(y_classes_moar)
 
         
         
