@@ -18,6 +18,8 @@ public class ColorSpaceTransformer {
 	 */
 	private static ColourSpace XYZ = ColourSpace.CIE_XYZ;
 	
+	private static ColourSpace LAB = ColourSpace.CIE_Lab;
+	
 	/**
 	 * Realiza la conversion de las imagenes que estan en la lista
 	 * @param newImages List<Files> lista de imagenes
@@ -32,7 +34,7 @@ public class ColorSpaceTransformer {
 			//File[] imageList = file.listFiles();
 			
 			//for (File img : imageList) {
-				MBFImage converted = ColourSpace.convert(ImageUtilities.readMBF(file), XYZ);
+				MBFImage converted = ColourSpace.convert(ImageUtilities.readMBF(file), LAB);
 				ImageUtilities.write(converted, new File(file.getAbsolutePath()));
 			//}
 		}
@@ -41,6 +43,10 @@ public class ColorSpaceTransformer {
 	
 	public static void imageToXYZ(File file) throws Exception{
 		MBFImage converted = ColourSpace.convert(ImageUtilities.readMBF(file), XYZ);
+		ImageUtilities.write(converted, file);
+	}
+	public static void imageToLAB(File file) throws Exception{
+		MBFImage converted = ColourSpace.convert(ImageUtilities.readMBF(file), LAB);
 		ImageUtilities.write(converted, file);
 	}
 //https://github.com/lessthanoptimal/BoofCV/blob/v0.23/examples/src/boofcv/examples/features/ExampleFitEllipse.java

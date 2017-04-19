@@ -31,6 +31,8 @@ public class Filter {
 	private static final String SOURCE = "." + OS + "images";
 	public static final String YES_ROUTE = "." + OS + "datasource" + OS + "Leishmaniasis";
 	public static final String NO_ROUTE = "." + OS + "datasource" + OS + "Non_Leishmaniasis";
+	private static final String TEST_SET_YES = "." + OS + "testDir" + OS + "Leishmaniasis";
+	private static final String TEST_SET_NO = "." + OS + "testDir" + OS + "Non_Leishmaniasis";
 
 	// http://stackoverflow.com/questions/7951290/re-sizing-an-image-without-losing-quality
 	// http://stackoverflow.com/questions/6390964/decrease-image-resolution-in-java
@@ -48,14 +50,15 @@ public class Filter {
 			if (!no_route.createNewFile()) {
 				FileUtils.cleanDirectory(no_route);
 			}
+
 			log.info("dataset subdirectories created");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
 		BufferedReader br = null;
-		Hashtable<String, String> positives = new Hashtable<>(1500);
-		Hashtable<String, String> negatives = new Hashtable<>(1500);
+		Hashtable<String, String> positives = new Hashtable<>(1000);
+		Hashtable<String, String> negatives = new Hashtable<>(1000);
 		try {
 			br = new BufferedReader(new FileReader(LIST_NO));
 			String line = br.readLine();
@@ -75,12 +78,14 @@ public class Filter {
 			log.info("wrote images' ids");
 
 			File[] dirs = new File(SOURCE).listFiles();
-
+			int testSegmentY = 0;
+			int testSegmentN = 0;
 			log.info("resizing images, moving to folders");
 			for (File file : dirs) {
 				String[] whole = file.getName().split("_");
 				String varNombre = whole[1];
 				String filter = whole[3];
+
 				if (filter.equals("C01")) {
 					if (positives.containsKey(varNombre)) {
 
@@ -90,8 +95,9 @@ public class Filter {
 						BufferedImage img = ImageIO.read(dest);
 						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
 						ImageIO.write(img, "jpg", dest);
-						//to XYZ
-						ColorSpaceTransformer.imageToXYZ(dest);
+						testSegmentY++;
+						//ColorSpaceTransformer.imageToXYZ(dest);
+						//ColorSpaceTransformer.imageToLAB(dest);
 
 					} else if (negatives.containsKey(varNombre)) {
 
@@ -101,15 +107,26 @@ public class Filter {
 						BufferedImage img = ImageIO.read(dest);
 						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
 						ImageIO.write(img, "jpg", dest);
-						//to XYZ
-						ColorSpaceTransformer.imageToXYZ(dest);
-
+						testSegmentN++;
+						//ColorSpaceTransformer.imageToXYZ(dest);
+						//ColorSpaceTransformer.imageToLAB(dest);
 
 					} else {
 						// no action
 					}
 				}
 
+			}
+			int divY = (testSegmentY/4);
+			int divN = (testSegmentN/4);
+			File[] leishDirs = yes_route.listFiles();
+			File[] nonLDirs = no_route.listFiles();
+			
+			for (int i = 0; i < divY; i++) {
+				FileUtils.moveFileToDirectory(leishDirs[i], new File(TEST_SET_YES+OS+leishDirs[i].getName()), true);
+			}
+			for (int i = 0; i < divN; i++) {
+				FileUtils.moveFileToDirectory(nonLDirs[i], new File(TEST_SET_NO+OS+nonLDirs[i].getName()), true);
 			}
 
 		} catch (Exception e) {

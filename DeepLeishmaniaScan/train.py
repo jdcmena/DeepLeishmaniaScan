@@ -1,5 +1,6 @@
 from __future__ import division # /: float div, //: integer div
 from PIL import Image
+import random
 import os
 import glob
 import cv2
@@ -23,8 +24,9 @@ from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.applications.inception_v3 import InceptionV3
 from keras.utils import np_utils
-from sklearn.cross_validation import train_test_split
+from keras.initializers import TruncatedNormal
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 
 
 #from keras.utils.visualize_util import plot
@@ -40,7 +42,7 @@ catchedVars = vars(parser.parse_args())
 img_width = 150
 img_height = 150
 
-
+np.set_printoptions(threshold=np.inf)
 
 def runModel(runConfigJson):
     
@@ -63,7 +65,7 @@ def runModel(runConfigJson):
     ##train_data_dir='conjuntoDeDatos'##'data/train'
     ##validation_data_dir='conjuntoDeDatos'##'data/validation'
 
-    train_data_source='datasource'
+    train_data_source='testDir'
 
     train_data_dir=['fold1','fold2','fold3','fold4','fold5']
     validation_data_dir=['fold-test1','fold-test2','fold-test3','fold-test4','fold-test5']
@@ -79,24 +81,44 @@ def runModel(runConfigJson):
     
     # load weights into base model
     inceptionModel.load_weights("InceptionV3_1.h5")
-    
-    
+
+    #random
+
+    #-------------
+    #Seed
+    init_seed = 957418
+    random.seed(957418)
+
+    #-------------
+
+    trunc_rnd_1 = random.random()
+    trunc_rnd_2 = random.random()
+
+    bias_rnd_1 = random.random()
+    bias_rnd_2 = random.random()
+
+    #kernel and bias initializers
+    truncatedN_1= TruncatedNormal(mean=0.0, stddev=0.05, seed=trunc_rnd_1)
+    truncatedN_2= TruncatedNormal(mean=0.0, stddev=0.05, seed=trunc_rnd_2)
+
+    biasInit_1= TruncatedNormal(mean=0.0, stddev=0.005, seed= bias_rnd_1)
+    biasInit_2= TruncatedNormal(mean=0.0, stddev=0.005, seed= bias_rnd_2)
     
     ###adding more layers
     
     x = inceptionModel.output
     x = GlobalAveragePooling2D()(x)
-    x = Dense(2048, activation='relu')(x)
+    x = Dense(2048, activation='relu', kernel_initializer=truncatedN_1, bias_initializer=biasInit_1)(x)
     x = Dropout(0.9)(x)
-    x = Dense(1024, activation='relu')(x)
+    x = Dense(1024, activation='relu', kernel_initializer=truncatedN_2, bias_initializer=biasInit_2)(x)
     predict = Dense(2, activation='softmax')(x)
     
     loaded_model = Model(input=inceptionModel.input, output=predict)
     
-    for layer in loaded_model.layers[:150]:
+    for layer in loaded_model.layers[:140]:
         layer.trainable = False
         
-    for layer in loaded_model.layers[150:]:
+    for layer in loaded_model.layers[140:]:
         layer.trainable = True
     
     
@@ -216,12 +238,12 @@ def runModel(runConfigJson):
     )
 
     #####this generator will be used to create confusion matrix, after training finished
-    confusion_mat_gen = test_datagen.flow_from_directory(
+    confusion_mat_gen = train_datagen.flow_from_directory(
         train_data_source,
         target_size=(img_width,img_height),
-        batch_size=10,
+        batch_size=50,
         class_mode='categorical',
-        shuffle=True,
+        shuffle=False,
         classes=['Leishmaniasis','Non_Leishmaniasis']
         )
 
@@ -243,7 +265,6 @@ def runModel(runConfigJson):
     evaluation = loaded_model.evaluate_generator(validation_generator_1, val_samples=100,max_q_size=10, nb_worker=4, pickle_safe=True)
     accuracy_sets[0]='{0:.3g}'.format(evaluation[1]*100)
     print("Accuracy fold 1: %.2f%%" % (evaluation[1]*100))
-
 
 
     ########Fold 2
@@ -305,58 +326,77 @@ def runModel(runConfigJson):
     for element in accuracy_sets:
         var_total = float(var_total)+float(element)
 
-
-
     gblAcc = var_total/5.0
-    #    This output is read from Java program as line.split(" ")[1]   #####
+        #This output is read from Java program as line.split(" ")[1]   #####
     print("Global Accuracy: "+str(gblAcc)+" %")
 
     #prediction = loaded_model.predict_generator(validation_generator_1, val_samples=100)
 
 #https://groups.google.com/forum/#!searchin/keras-users/confusion$20matrix|sort:relevance/keras-users/W-AdTqL7oNE/wojuYRFFBQAJ
-    y_test_hat = []
-    y_test = []
+    predicted = []
+    real = []
     counter = 0
+
     for X, y in confusion_mat_gen:
-        # Append to y_test
-        y_test.extend(y.ravel())
 
-        # Predict and append to y_test_hat
+        real.extend(y.ravel())
         y_hat_batch = loaded_model.predict(X)
-        y_test_hat.extend(y_hat_batch.ravel())
-
+        predicted.extend(y_hat_batch.ravel())
         counter = counter +1
 
-        if counter == 50:
+        if counter == 6:
             break
 
     # Convert to np.array and round predictions
-    y_test = np.array(y_test)
-    y_test_hat = np.round(y_test_hat)
+    real = np.array(real)
+    predicted = np.round(predicted)
 
-    cf = confusion_matrix(y_test, y_test_hat)
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
 
-    tn = float(cf[0][0])
-    fp = float(cf[0][1])
-    fn = float(cf[1][0])
-    tp = float(cf[1][1])
-    sensitivity=(tp/(tp+fn))*100
-    specificity=(tn/(tn+fp))*100
+    for i in range(len(predicted)): #True positive
+        if real[i]==predicted[i]==0:
+            TP += 1
+
+    for i in range(len(predicted)): #False positive
+        if predicted[i]==1 and predicted[i]!=real[i]:
+            FP += 1
+
+    for i in range(len(predicted)): #True negative
+        if real[i]==predicted[i]==1:
+            TN += 1
+
+    for i in range(len(predicted)): #False negative
+        if predicted[i]==1 and real[i]!=predicted[i]:
+            FN += 1
+
+
+
+    #http://scikit-learn.org/stable/modules/model_evaluation.html
+    #cf = confusion_matrix(real, predicted).ravel()
+    #tn, fp, fn, tp = cf
+
+    sensitivity=(TP/(TP+FN))*100
+    specificity=(TN/(TN+FP))*100
     print("Sensitivity: %.2f%%" % sensitivity)
     print("Specificity: %.2f%%" % specificity)
     #print(cf)
 
+    #print(classification_report(real, predicted, target_names=['Leishmaniasis','Non-Leishmaniasis']))
 
-
-    #for i in xrange(0,len(prediction)):
-    #    if np.all(prediction[i] <= 0.5):
-    #        prediction[i] = 0
-    #    else:
-    #        prediction[i] = 1
-
-    #print np.sum(prediction)
-    
-    #CM = confusion_matrix(y_actual,prediction)
+    file = open("output.txt","w")
+    file.write("Sensitivity "+str(sensitivity)+"\n")
+    file.write("Accuracy "+str(gblAcc)+"\n")
+    file.write("Specificity "+str(specificity)+"\n")
+    file.write("Initial seed: "+str(init_seed)+"\n")
+    file.write("generated weights by seed: \n")
+    file.write("kernelInit_1:"+ str(trunc_rnd_1)+" \n")
+    file.write("kernelInit_2:"+ str(trunc_rnd_2)+" \n")
+    file.write("biasInit_1:"+ str(bias_rnd_1)+" \n")
+    file.write("biasInit_2:"+ str(bias_rnd_2)+" \n")
+    file.close()
     
     
 
@@ -417,35 +457,6 @@ def runModel(runConfigJson):
     #print(evR)
     
     ##print('finished')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
     
 
