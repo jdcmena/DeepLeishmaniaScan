@@ -81,52 +81,52 @@ public class Filter {
 			int testSegmentY = 0;
 			int testSegmentN = 0;
 			log.info("resizing images, moving to folders");
+			
 			for (File file : dirs) {
 				String[] whole = file.getName().split("_");
 				String varNombre = whole[1];
-				String filter = whole[3];
 
-				if (filter.equals("C01")) {
-					if (positives.containsKey(varNombre)) {
+				if (positives.containsKey(varNombre)) {
 
-						FileUtils.copyFileToDirectory(file, yes_route);
-						positives.remove(varNombre);
-						File dest = new File(yes_route + OS + file.getName());
-						BufferedImage img = ImageIO.read(dest);
-						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
-						ImageIO.write(img, "jpg", dest);
-						testSegmentY++;
-						//ColorSpaceTransformer.imageToXYZ(dest);
-						//ColorSpaceTransformer.imageToLAB(dest);
+					FileUtils.copyFileToDirectory(file, yes_route);
+					//positives.remove(varNombre);
+					File dest = new File(yes_route + OS + file.getName());
+					BufferedImage img = ImageIO.read(dest);
+					img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+					ImageIO.write(img, "jpg", dest);
+					testSegmentY++;
+					//ColorSpaceTransformer.imageToLAB(dest);
 
-					} else if (negatives.containsKey(varNombre)) {
+				} else if (negatives.containsKey(varNombre)) {
 
-						FileUtils.copyFileToDirectory(file, no_route);
-						negatives.remove(varNombre);
-						File dest = new File(no_route + OS + file.getName());
-						BufferedImage img = ImageIO.read(dest);
-						img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
-						ImageIO.write(img, "jpg", dest);
-						testSegmentN++;
-						//ColorSpaceTransformer.imageToXYZ(dest);
-						//ColorSpaceTransformer.imageToLAB(dest);
+					FileUtils.copyFileToDirectory(file, no_route);
+					//negatives.remove(varNombre);
+					File dest = new File(no_route + OS + file.getName());
+					BufferedImage img = ImageIO.read(dest);
+					img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+					ImageIO.write(img, "jpg", dest);
+					testSegmentN++;
+					//ColorSpaceTransformer.imageToLAB(dest);
 
-					} else {
-						// no action
-					}
+				} else {
+					// no action
 				}
-
+				
 			}
-			int divY = (testSegmentY/4);
-			int divN = (testSegmentN/4);
+			int divY = (testSegmentY / 5);
+			int divN = (testSegmentN / 5);
 			File[] leishDirs = yes_route.listFiles();
 			File[] nonLDirs = no_route.listFiles();
 			
+			FileUtils.forceMkdir(new File(TEST_SET_YES));
+			FileUtils.forceMkdir(new File(TEST_SET_NO));
+			
 			for (int i = 0; i < divY; i++) {
-				FileUtils.moveFileToDirectory(leishDirs[i], new File(TEST_SET_YES+OS+leishDirs[i].getName()), true);
+				FileUtils.moveFile(leishDirs[i], new File(TEST_SET_YES + OS + leishDirs[i].getName()));
+				
 			}
 			for (int i = 0; i < divN; i++) {
-				FileUtils.moveFileToDirectory(nonLDirs[i], new File(TEST_SET_NO+OS+nonLDirs[i].getName()), true);
+				FileUtils.moveFile(nonLDirs[i], new File(TEST_SET_NO + OS + nonLDirs[i].getName()));
 			}
 
 		} catch (Exception e) {

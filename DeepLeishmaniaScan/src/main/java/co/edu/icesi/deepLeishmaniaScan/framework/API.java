@@ -79,17 +79,21 @@ public class API implements IAPI {
 						if (flag == 1) {
 							if (line.contains("Global")) {
 								temp = line.split(" ")[2];
+								log.info(temp);
 								relevantOutput[0] = Double.parseDouble(temp.substring(0, temp.length() - 2));
 								Log.info("got accuracy");
 							}
 							if(line.contains("Sensitivity")){
 								temp = line.split(" ")[1];
 								relevantOutput[1] = Double.parseDouble(temp.substring(0, temp.length()-2));
+								log.info(temp);
 							}
 							if(line.contains("Specificity")){
+								temp = line.split(" ")[1];
 								relevantOutput[2] = Double.parseDouble(temp.substring(0, temp.length()-2));
+								log.info(temp);
 							}
-							if(relevantOutput[0] != 0.0 && relevantOutput[1] != 0.0 && relevantOutput[2] != 0.0){
+							if(line.contains("Saving model...")){
 								metricas = relevantOutput;
 								orq.notificar();
 							}
