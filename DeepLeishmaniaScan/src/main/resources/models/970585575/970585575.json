@@ -1,0 +1,6 @@
+{
+	"id":970585575, ##[0]
+	"nombre":"q", ##[1]
+	"runConfig":"./src/main/resources/models/970585575/runconfig.json", ##[2]
+	"direccionDirectorio":"./src/main/resources/models/970585575/" ##[3]
+}
