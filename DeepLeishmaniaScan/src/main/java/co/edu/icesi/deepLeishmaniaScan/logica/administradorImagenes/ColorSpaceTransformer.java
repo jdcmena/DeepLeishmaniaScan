@@ -34,8 +34,6 @@ public class ColorSpaceTransformer {
 
 	private static final int[] LAB_UPPER_BOUNDS = { 100, 128, 128 };
 
-	private static ColourSpace LAB = ColourSpace.CIE_Lab_Norm;
-
 	public static double[] RGBtoLAB(double RGB[]) {
 		return XYZtoLab(RGBtoXYZ(RGB));
 	}
@@ -43,20 +41,21 @@ public class ColorSpaceTransformer {
 	public static int[] RGBtoLABNormalized(double RGB[]) {
 		double[] lab = RGBtoLAB(RGB);
 		int[] normal = new int[3];
-		/*
+		
 ///LAB
+		/*
 		for (int i = 0; i < 3; i++) {
 			normal[i] = remap(lab[i], lab[i] < LAB_LOWER_BOUNDS[i] ? lab[i] : LAB_LOWER_BOUNDS[i],
 					lab[i] > LAB_UPPER_BOUNDS[i] ? lab[i] : LAB_UPPER_BOUNDS[i], 0, 255);
 		}
+		/*
 		
-		///L
 		for (int i = 0; i < 3; i++) {
 			normal[i] = remap(lab[0], lab[0] < LAB_LOWER_BOUNDS[0] ? lab[0] : LAB_LOWER_BOUNDS[0],
-					lab[0] > LAB_UPPER_BOUNDS[i] ? lab[0] : LAB_UPPER_BOUNDS[i], 0, 255);
+					lab[0] > LAB_UPPER_BOUNDS[0] ? lab[0] : LAB_UPPER_BOUNDS[0], 0, 255);
 		}
+		/*
 		
-		///A
 		for (int i = 0; i < 3; i++) {
 			normal[i] = remap(lab[1], lab[1] < LAB_LOWER_BOUNDS[1] ? lab[1] : LAB_LOWER_BOUNDS[1],
 					lab[1] > LAB_UPPER_BOUNDS[1] ? lab[1] : LAB_UPPER_BOUNDS[1], 0, 255);
@@ -67,6 +66,7 @@ public class ColorSpaceTransformer {
 			normal[i] = remap(lab[2], lab[2] < LAB_LOWER_BOUNDS[2] ? lab[2] : LAB_LOWER_BOUNDS[2],
 					lab[2] > LAB_UPPER_BOUNDS[2] ? lab[2] : LAB_UPPER_BOUNDS[2], 0, 255);
 		}
+		
 
 		return normal;
 	}
