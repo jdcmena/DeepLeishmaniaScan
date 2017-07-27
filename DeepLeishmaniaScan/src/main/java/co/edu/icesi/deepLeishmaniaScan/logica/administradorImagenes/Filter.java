@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.util.Hashtable;
@@ -38,7 +39,11 @@ public class Filter {
 	// http://stackoverflow.com/questions/6390964/decrease-image-resolution-in-java
 	// https://web.archive.org/web/20080516181120/http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
 
-	public static void divideAndResizeImages() {
+	/**
+	 * Metodo que lee los id's de historias clinicas obtenidos del archivo excel y preparar para k-fold cross validation
+	 * @param useTestDirectory true para dividir trainig set y sacar un test set, falso para obtener solamente el training set
+	 */
+	public static void divideAndResizeImages(boolean useTestDirectory) {
 
 		File yes_route = new File(YES_ROUTE);
 		File no_route = new File(NO_ROUTE);
@@ -57,8 +62,8 @@ public class Filter {
 		}
 
 		BufferedReader br = null;
-		Hashtable<String, String> positives = new Hashtable<>(1000);
-		Hashtable<String, String> negatives = new Hashtable<>(1000);
+		Hashtable<String, String> positives = new Hashtable<>(1300);
+		Hashtable<String, String> negatives = new Hashtable<>(1300);
 		try {
 			br = new BufferedReader(new FileReader(LIST_NO));
 			String line = br.readLine();
@@ -77,11 +82,24 @@ public class Filter {
 
 			log.info("wrote images' ids");
 
-			File[] dirs = new File(SOURCE).listFiles();
+			final FilenameFilter fnF = new FilenameFilter() {
+
+				@Override
+				public boolean accept(File dir, String name) {
+					try {
+						return Integer.parseInt(name.split("_")[1]) <= 13500;
+					} catch (Exception e) {
+						return false;
+					}
+
+				}
+			};
+
+			File[] dirs = new File(SOURCE).listFiles(fnF);
 			int testSegmentY = 0;
 			int testSegmentN = 0;
 			log.info("resizing images, moving to folders");
-			
+
 			for (File file : dirs) {
 				String[] whole = file.getName().split("_");
 				String varNombre = whole[1];
@@ -89,50 +107,57 @@ public class Filter {
 				if (positives.containsKey(varNombre)) {
 
 					FileUtils.copyFileToDirectory(file, yes_route);
-					//positives.remove(varNombre);
+					// positives.remove(varNombre);
 					File dest = new File(yes_route + OS + file.getName());
 					BufferedImage img = ImageIO.read(dest);
-					img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+					img = getScaledInstance(img, 200, 200, RenderingHints.VALUE_INTERPOLATION_BILINEAR, false);
 					ImageIO.write(img, "jpg", dest);
 					testSegmentY++;
-					//ColorSpaceTransformer.imageToLAB(dest);
+					// ColorSpaceTransformer.imageToLAB(dest);
 
 				} else if (negatives.containsKey(varNombre)) {
 
 					FileUtils.copyFileToDirectory(file, no_route);
-					//negatives.remove(varNombre);
+					// negatives.remove(varNombre);
 					File dest = new File(no_route + OS + file.getName());
 					BufferedImage img = ImageIO.read(dest);
-					img = getScaledInstance(img, 400, 400, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+					img = getScaledInstance(img, 200, 200, RenderingHints.VALUE_INTERPOLATION_BILINEAR, false);
 					ImageIO.write(img, "jpg", dest);
 					testSegmentN++;
-					//ColorSpaceTransformer.imageToLAB(dest);
+					// ColorSpaceTransformer.imageToLAB(dest);
 
 				} else {
 					// no action
 				}
-				
-			}
-			int divY = (testSegmentY / 5);
-			int divN = (testSegmentN / 5);
-			File[] leishDirs = yes_route.listFiles();
-			File[] nonLDirs = no_route.listFiles();
-			
-			FileUtils.forceMkdir(new File(TEST_SET_YES));
-			FileUtils.forceMkdir(new File(TEST_SET_NO));
-			
-			for (int i = 0; i < divY; i++) {
-				FileUtils.moveFile(leishDirs[i], new File(TEST_SET_YES + OS + leishDirs[i].getName()));
-				
-			}
-			for (int i = 0; i < divN; i++) {
-				FileUtils.moveFile(nonLDirs[i], new File(TEST_SET_NO + OS + nonLDirs[i].getName()));
+
 			}
 
+			if (useTestDirectory) {
+				
+				int divY = (testSegmentY / 5);
+				int divN = (testSegmentN / 5);
+				File[] leishDirs = yes_route.listFiles();
+				File[] nonLDirs = no_route.listFiles();
+
+				FileUtils.forceMkdir(new File(TEST_SET_YES));
+				FileUtils.forceMkdir(new File(TEST_SET_NO));
+
+				for (int i = 0; i < divY; i++) {
+					FileUtils.moveFile(leishDirs[i], new File(TEST_SET_YES + OS + leishDirs[i].getName()));
+
+				}
+				for (int i = 0; i < divN; i++) {
+					FileUtils.moveFile(nonLDirs[i], new File(TEST_SET_NO + OS + nonLDirs[i].getName()));
+				}
+
+			}
+			
 		} catch (Exception e) {
 
+			e.printStackTrace();
 		} finally {
 			try {
+
 				br.close();
 				positives.clear();
 				negatives.clear();

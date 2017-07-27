@@ -58,7 +58,7 @@ public class AdministradorImagenes implements IAdministradorImagenes {
 				setupKFoldCrossValidate(true);
 			}
 		} else {
-			Filter.divideAndResizeImages();
+			Filter.divideAndResizeImages(false);
 			verifyHash();
 			setupKFoldCrossValidate(false);
 		}
