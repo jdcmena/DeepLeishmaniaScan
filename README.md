@@ -7,7 +7,7 @@ This manual will cover the steps to execute the commands to perform the training
 # Preconditions:
 - **Linux**, **Ubuntu 16.04 LTS.** There is no guarantee that this software, after having followed all the steps, can work correctly in a different version of the previous OS.
 - **Python 2.7.2 nativo**.
-- It is recommended that the computer has an Nvidia GPU for faster processing. If available, install  **[Tensorflow for GPU](https://www.tensorflow.org/install/install_linux#InstallingNativePip)**, **[CUDA ToolKit 7.0 o greater](https://developer.nvidia.com/cuda-downloads)** and **[CuDNN](https://developer.nvidia.com/cudnn)**, en ese orden.
+- It is recommended that the computer has a Nvidia GPU for faster processing. If available, install  **[Tensorflow for GPU](https://www.tensorflow.org/install/install_linux#InstallingNativePip)**, **[CUDA ToolKit 7.0 o greater](https://developer.nvidia.com/cuda-downloads)** and **[CuDNN](https://developer.nvidia.com/cudnn)**.
 
 # Folder Structure
 The project folder called DeepLeishmaniaScan contains several files and folders that are important:
